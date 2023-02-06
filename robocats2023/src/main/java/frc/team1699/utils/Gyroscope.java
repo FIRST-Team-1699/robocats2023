@@ -1,16 +1,22 @@
 package frc.team1699.utils;
 
+/*
+ * A wrapper class for the KauaiLabs NavX. Contains additions such as a datapoint for the
+ * yaw value of being centered on the charging port, and methods like isCentered to, well,
+ * check if the robot is centered.
+ * 
+ * NOT TESTED.
+ */
+
 import com.kauailabs.navx.frc.AHRS;
 
 public class Gyroscope extends AHRS {
-    // instance data
-    private AHRS gyro;
     /** The gyro heading at the start. This can be referenced to autocenter if necessary */
     private double centeredHeading;
+
     private boolean isInitialized;
 
     public Gyroscope(){
-        gyro = new AHRS();
         isInitialized = false;
     }
 
