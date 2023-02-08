@@ -47,6 +47,10 @@ public class LimeLight {
         table.getEntry("pipeline").setNumber(index);
     }
 
+    public int getPipeline(){
+        return (int) table.getEntry("pipeline").getDouble(0.0);
+    }
+
     public void togglePipeline(){
         double lastPipeline = table.getEntry("pipeline").getDouble(0.0);
         if (lastPipeline == 0.0){
