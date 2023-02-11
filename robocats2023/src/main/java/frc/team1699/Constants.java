@@ -14,5 +14,10 @@ package frc.team1699;
  */
 
 public class Constants {
-    
+    // CAN bus ID's
+    public static final int kIntakeMotorID = 1;
+    public static final int kPivotMotorID = 3;
+    public static final int kTelescopeMotorID = 2;
+
+    public static final int kDriveJoystickPort = 0;
 }

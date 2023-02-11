@@ -21,10 +21,71 @@ public class Pivot {
     }
 
     public void update(){
+        switch (currentState){
+            case STORED:
 
+            break;
+            case HIGHSUBSTATION:
+
+            break;
+            case HIGHCUBE:
+
+            break;
+            case MIDCUBE:
+
+            break;
+            case LOWCUBE:
+
+            break;
+            case HIGHCONE:
+
+            break;
+            case MIDCONE:
+
+            break;
+            case LOWCONE:
+
+            break;
+            case FLOOR:
+
+            break;
+            default:
+            break;
+        }
     }
 
     public void handleStateTransition(){
+        switch (wantedState){
+            case STORED:
+
+            break;
+            case HIGHSUBSTATION:
+
+            break;
+            case HIGHCUBE:
+
+            break;
+            case MIDCUBE:
+
+            break;
+            case LOWCUBE:
+
+            break;
+            case HIGHCONE:
+
+            break;
+            case MIDCONE:
+
+            break;
+            case LOWCONE:
+
+            break;
+            case FLOOR:
+
+            break;
+            default:
+            break;
+        }
         this.currentState = this.wantedState;
     }
 
@@ -35,10 +96,11 @@ public class Pivot {
         }
     }
     
-    public PivotStates getPivotState(){
+    public PivotStates getCurrentState(){
         return this.currentState;
     }
 
+    
     public enum PivotStates {
         STORED,
         HIGHSUBSTATION,

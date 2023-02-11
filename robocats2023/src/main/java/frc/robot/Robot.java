@@ -7,6 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Joystick;
+import frc.team1699.subsystems.Intake;
+import frc.team1699.subsystems.Intake.IntakeStates;
+import frc.team1699.subsystems.Telescope;
+import frc.team1699.subsystems.Telescope.TelescopeStates;
+import frc.team1699.Constants;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -15,6 +21,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
+  private Joystick driveJoystick;
+  private Intake intake;
+  private Telescope telescope;
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
@@ -29,6 +38,9 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    driveJoystick = new Joystick(Constants.kDriveJoystickPort);
+    intake = new Intake();
+    telescope = new Telescope();
   }
 
   /**
@@ -78,7 +90,31 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if(driveJoystick.getRawButton(1)){
+      intake.setWantedState(IntakeStates.INTAKING);
+    }
+
+    if(driveJoystick.getRawButton(2)){
+      intake.setWantedState(IntakeStates.PLACING);
+    }
+
+    if(driveJoystick.getRawButtonReleased(1) || driveJoystick.getRawButtonReleased(2)){
+      intake.setWantedState(IntakeStates.IDLE);
+    }
+
+    if(driveJoystick.getRawButtonPressed(8)){
+      System.out.println(intake.getCurrentState());
+    }
+
+    if(driveJoystick.getRawButtonPressed(6)){
+      telescope.setWantedState(TelescopeStates.FLOOR);
+    }
+
+    if(driveJoystick.getRawButtonReleased(6)){
+      telescope.setWantedState(TelescopeStates.RETRACTED);
+    }
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
