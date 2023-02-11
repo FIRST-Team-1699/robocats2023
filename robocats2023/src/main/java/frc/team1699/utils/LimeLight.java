@@ -60,6 +60,7 @@ public class LimeLight {
         }
     }
     
+    /** Returns the distance to the nearest apriltag in inches. */
     public double getDistanceFromTarget(){
         double targetOffsetAngle_Vertical = getTY();
         double limelightMountAngle = 47.0;

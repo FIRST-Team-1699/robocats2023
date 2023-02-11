@@ -61,7 +61,7 @@ public class PoseHandler {
         limeLight.setPipeline(1);
         if(limeLight.getTV() > 0){
             // calculates the distance to the closest apriltag
-            distanceToTag = limeLight.getDistanceFromTarget();
+            distanceToTag = limeLight.getDistanceFromTarget() * 0.0254;
 
             // calculates the angle of the robot, assuming that facing where the robot started is the center I believe
             if(gyro.getYaw() > 0){
