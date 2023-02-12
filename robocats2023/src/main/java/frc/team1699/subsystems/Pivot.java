@@ -1,6 +1,13 @@
 package frc.team1699.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import frc.team1699.Constants;
+
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 
 /** The pivot class controls the rotation of the arm. */
 public class Pivot {
@@ -8,16 +15,26 @@ public class Pivot {
     private PivotStates currentState, wantedState;
     
     // Calculates the speed to rotate the arm
-    private PIDController pivotSpeedLoop;
+    private CANSparkMax pivotMotor;
+    private RelativeEncoder pivotEncoder;
+    private SparkMaxPIDController pivotSpeedLoop;
+
     private final double kPivotP = 0;
     private final double kPivotI = 0;
     private final double kPivotD = 0;
 
+    private double wantedPosition = 0;
+
     /** Creates the pivot object, sets the default state to default */
-    public Pivot(){
+    public Pivot(){ 
+        pivotMotor = new CANSparkMax(Constants.kPivotMotorID, MotorType.kBrushless);
+        pivotEncoder = pivotMotor.getEncoder();
+        pivotSpeedLoop = pivotMotor.getPIDController();
+        pivotSpeedLoop.setP(kPivotP);
+        pivotSpeedLoop.setI(kPivotI);
+        pivotSpeedLoop.setD(kPivotD);
+        pivotSpeedLoop.setOutputRange(-.5, .5);
         this.currentState = PivotStates.STORED;
-        pivotSpeedLoop = new PIDController(kPivotP, kPivotI, kPivotD);
-        pivotSpeedLoop.setTolerance(0, 0);
     }
 
     public void update(){
@@ -25,7 +42,7 @@ public class Pivot {
             case STORED:
 
             break;
-            case HIGHSUBSTATION:
+            case SHELF:
 
             break;
             case HIGHCUBE:
@@ -59,7 +76,7 @@ public class Pivot {
             case STORED:
 
             break;
-            case HIGHSUBSTATION:
+            case SHELF:
 
             break;
             case HIGHCUBE:
@@ -86,13 +103,14 @@ public class Pivot {
             default:
             break;
         }
+        pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
         this.currentState = this.wantedState;
     }
 
     public void setWantedState(PivotStates wantedState){
         if(wantedState != this.wantedState){
-        this.wantedState = wantedState;
-        handleStateTransition();
+            this.wantedState = wantedState;
+            handleStateTransition();
         }
     }
     
@@ -103,7 +121,7 @@ public class Pivot {
     
     public enum PivotStates {
         STORED,
-        HIGHSUBSTATION,
+        SHELF,
         HIGHCUBE,
         MIDCUBE,
         LOWCUBE,

@@ -5,13 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.team1699.subsystems.Intake;
+import frc.team1699.subsystems.Manipulator;
 import frc.team1699.subsystems.Intake.IntakeStates;
-import frc.team1699.subsystems.Telescope;
-import frc.team1699.subsystems.Telescope.TelescopeStates;
+import frc.team1699.subsystems.Manipulator.ManipulatorStates;
+import frc.team1699.subsystems.Plow;
+import frc.team1699.subsystems.Plow.PlowStates;
 import frc.team1699.Constants;
 
 /**
@@ -22,12 +22,9 @@ import frc.team1699.Constants;
  */
 public class Robot extends TimedRobot {
   private Joystick driveJoystick;
+  private Manipulator manipulator;
   private Intake intake;
-  private Telescope telescope;
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private Plow plow;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -35,12 +32,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
     driveJoystick = new Joystick(Constants.kDriveJoystickPort);
+    manipulator = new Manipulator();
     intake = new Intake();
-    telescope = new Telescope();
+    plow = new Plow();
   }
 
   /**
@@ -64,25 +59,11 @@ public class Robot extends TimedRobot {
    * chooser code above as well.
    */
   @Override
-  public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
-  }
+  public void autonomousInit() {}
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
-  }
+  public void autonomousPeriodic() {}
 
   /** This function is called once when teleop is enabled. */
   @Override
@@ -107,13 +88,21 @@ public class Robot extends TimedRobot {
       System.out.println(intake.getCurrentState());
     }
 
-    if(driveJoystick.getRawButtonPressed(6)){
-      telescope.setWantedState(TelescopeStates.FLOOR);
+    if(driveJoystick.getRawButton(3)){
+      manipulator.setWantedState(ManipulatorStates.HIGH);
     }
 
-    if(driveJoystick.getRawButtonReleased(6)){
-      telescope.setWantedState(TelescopeStates.RETRACTED);
+    if(driveJoystick.getRawButton(4)){
+      manipulator.setWantedState(ManipulatorStates.LOW);
     }
+
+    if(driveJoystick.getRawButtonReleased(3) || driveJoystick.getRawButtonReleased(4)){
+      manipulator.setWantedState(ManipulatorStates.RETRACTED);
+    }
+
+    manipulator.update();
+    intake.update();
+    plow.update();
   }
 
   /** This function is called once when the robot is disabled. */

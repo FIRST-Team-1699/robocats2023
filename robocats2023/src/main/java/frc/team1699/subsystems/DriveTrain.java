@@ -7,7 +7,6 @@ public class DriveTrain {
         double portOutput = 0.0;
         double starOutput = 0.0;
 
-
         //TODO add deadband
         rotate = Math.copySign(rotate * rotate, rotate);
         throttle = Math.copySign(throttle * throttle, throttle);
