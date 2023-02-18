@@ -100,6 +100,12 @@ public class Robot extends TimedRobot {
       manipulator.setWantedState(ManipulatorStates.RETRACTED);
     }
 
+    if(driveJoystick.getRawButton(6)) {
+      plow.setWantedState(PlowStates.OUT);
+    } else {
+      plow.setWantedState(PlowStates.IN);
+    }
+    
     manipulator.update();
     intake.update();
     plow.update();

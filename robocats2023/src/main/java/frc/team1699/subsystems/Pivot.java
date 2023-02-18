@@ -1,11 +1,8 @@
 package frc.team1699.subsystems;
 
+import frc.team1699.Constants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import frc.team1699.Constants;
-
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 
@@ -16,7 +13,6 @@ public class Pivot {
     
     // Calculates the speed to rotate the arm
     private CANSparkMax pivotMotor;
-    private RelativeEncoder pivotEncoder;
     private SparkMaxPIDController pivotSpeedLoop;
 
     private final double kPivotP = 0;
@@ -28,7 +24,6 @@ public class Pivot {
     /** Creates the pivot object, sets the default state to default */
     public Pivot(){ 
         pivotMotor = new CANSparkMax(Constants.kPivotMotorID, MotorType.kBrushless);
-        pivotEncoder = pivotMotor.getEncoder();
         pivotSpeedLoop = pivotMotor.getPIDController();
         pivotSpeedLoop.setP(kPivotP);
         pivotSpeedLoop.setI(kPivotI);

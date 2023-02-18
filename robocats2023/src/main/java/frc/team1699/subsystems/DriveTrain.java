@@ -1,13 +1,48 @@
 package frc.team1699.subsystems;
 
+import frc.team1699.Constants;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.Joystick;
+
 public class DriveTrain {
-    
+    private final double kDeadZone = 0.25;
+    private DriveStates wantedState, currentState;
+
+    // MOTORS
+    private CANSparkMax portLeader, portFollowerOne, portFollowerTwo;
+    private CANSparkMax starLeader, starFollowerOne, starFollowerTwo;
+
+    private Joystick joystick;
+
+    public DriveTrain(Joystick joystick) {
+        portLeader = new CANSparkMax(Constants.kPortLeaderID, MotorType.kBrushless);
+        portFollowerOne = new CANSparkMax(Constants.kPortFollowerOneID, MotorType.kBrushless);
+        portFollowerTwo = new CANSparkMax(Constants.kPortFollowerTwoID, MotorType.kBrushless);
+        starLeader = new CANSparkMax(Constants.kStarLeaderID, MotorType.kBrushless);
+        starFollowerOne = new CANSparkMax(Constants.kStarFollowerOneID, MotorType.kBrushless);
+        starFollowerTwo = new CANSparkMax(Constants.kStarFollowerTwoID, MotorType.kBrushless);
+
+        portFollowerOne.follow(portLeader);
+        portFollowerTwo.follow(portLeader);
+        starFollowerOne.follow(starLeader);
+        starFollowerTwo.follow(starLeader);
+
+        this.joystick = joystick;
+
+        wantedState = DriveStates.MANUAL;
+        currentState = DriveStates.MANUAL;
+    }
+
     /** runArcadeDrive is a magic method used every year. It it what we use to control the robot's movement */
     public void runArcadeDrive(double rotate, double throttle) {
         double portOutput = 0.0;
         double starOutput = 0.0;
 
-        //TODO add deadband
+        if(currentState == DriveStates.MANUAL && rotate < kDeadZone) {
+            rotate = 0;
+        }
         rotate = Math.copySign(rotate * rotate, rotate);
         throttle = Math.copySign(throttle * throttle, throttle);
 
@@ -33,5 +68,44 @@ public class DriveTrain {
             }
         }
         // set motors to port/star output here or else nothing happens lol
+        portLeader.set(portOutput);
+        starLeader.set(starOutput);
+    }
+
+    public void update() {
+        switch(currentState) {
+            case MANUAL:
+                runArcadeDrive(joystick.getX(), -joystick.getY());
+            break;
+            case AUTOBALANCE:
+
+            break;
+        }
+    }
+    public void setWantedState(DriveStates wantedState) {
+        if(this.currentState != wantedState) {
+            this.wantedState = wantedState;
+            handleStateTransition();
+        }
+    }
+
+    public void handleStateTransition() {
+        switch (wantedState) {
+            case MANUAL:
+
+            break;
+            case AUTOBALANCE:
+            
+            break;
+        }
+    }
+
+    public DriveStates getCurrentState() {
+        return this.currentState;
+    }
+
+    public enum DriveStates {
+        MANUAL,
+        AUTOBALANCE
     }
 }
