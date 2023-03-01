@@ -23,8 +23,14 @@ public class Telescope {
     private final double kMinOutput = -.5;
     private final double kMaxOutput = .5;
     
-    private double wantedPosition = 25;
+    private double wantedPercentage = 0;
+    private double wantedPosition = calculateTelescopeRotations(wantedPercentage);
     private final double kMaxError = 0.1;
+
+    // maximum amount of rotations of the encoder, used to calculate rotations by percentage
+    // TODO: tune this value
+    private static final double kMaxRotations = 1000;
+
     /** creates the telescope object, sets default state to retracted */
     public Telescope() {
         telescopeMotor = new CANSparkMax(Constants.kTelescopeMotorID, MotorType.kBrushless);
@@ -61,10 +67,9 @@ public class Telescope {
             default:
             break;    
         }
-        if (Math.abs(telescopeEncoder.getPosition() - wantedPosition) <= kMaxError) {
-            telescopeSpeedLoop.setReference(telescopeEncoder.getPosition(), ControlType.kPosition);
-        }
-        
+        // if (Math.abs(telescopeEncoder.getPosition() - wantedPosition) <= kMaxError) {
+        //     telescopeSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
+        // }    redundant?
     }
 
     public void setWantedState(TelescopeStates wantedState) {
@@ -77,27 +82,28 @@ public class Telescope {
     public void handleStateTransition() {
         switch (wantedState) {
             case RETRACTED:
-                wantedPosition = 0;
+                wantedPercentage = 30;
             break;
             case SHELF:
-                wantedPosition = 50;
+                wantedPercentage = 30;
             break;
             case HIGH:
-                wantedPosition = 60;
+                wantedPercentage = 30;
             break;
             case MID:
-            wantedPosition = 40;
+                wantedPercentage = 30;
             break;
             case LOW:
-                wantedPosition = 20;
+                wantedPercentage = 30;
             break;
             case FLOOR:
-                wantedPosition = 30;
+                wantedPercentage = 30;
             break;
             default:
             break;
         }
         
+        wantedPosition = calculateTelescopeRotations(wantedPercentage);
         telescopeSpeedLoop.setReference(wantedPosition, CANSparkMax.ControlType.kPosition);
         this.currentState = this.wantedState;
     }
@@ -108,6 +114,10 @@ public class Telescope {
 
     public void resetEncoder(){
         telescopeEncoder.setPosition(0);
+    }
+
+    public static double calculateTelescopeRotations(double percentage) {
+        return (percentage / 100) * kMaxRotations;
     }
 
     public enum TelescopeStates {
