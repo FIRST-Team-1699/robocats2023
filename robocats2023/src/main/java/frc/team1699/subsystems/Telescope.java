@@ -24,7 +24,6 @@ public class Telescope {
     
     private double wantedPercentage = 0;
     private double wantedPosition = calculateTelescopeRotations(wantedPercentage);
-    private final double kMaxError = 0.1;
 
     // maximum amount of rotations of the encoder, used to calculate rotations by percentage
     // TODO: tune this value

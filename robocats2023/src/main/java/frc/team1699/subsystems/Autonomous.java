@@ -13,11 +13,13 @@ public class Autonomous {
     private final String choiceThree = "Score and Mobility";
     private final String choiceFour = "Score and Do Nothing";
     private final String choiceFive = "Mobility Only";
+    private final String choiceSix = "Score and Pickup";
     private String autonChoice;
 
     private AutonStates currentState;
 
     private static int placingTicks = 0;
+    private static double rotationHeading = 0;
     // TODO: TUNE
     private final int kMobilityTaxiRotations = 500;
 
@@ -33,6 +35,7 @@ public class Autonomous {
         autonChooser.addOption(choiceThree, choiceThree);
         autonChooser.addOption(choiceFour, choiceFour);
         autonChooser.addOption(choiceFive, choiceFive);
+        autonChooser.addOption(choiceSix, choiceSix);
         SmartDashboard.putData("Autonomous Choices", autonChooser);
 
         this.driveTrain = driveTrain;
@@ -87,6 +90,12 @@ public class Autonomous {
                             driveTrain.runArcadeDrive(0, -.3);
                         }
                     break;
+                    case TURNING:
+                        System.out.println("Turning state reached (something went wrong");
+                    break;
+                    case COLLECTING:
+                        System.out.println("Collecting state reached (something went wrong");
+                    break;
                     case BALANCING:
                         if (driveTrain.getCurrentState() != DriveStates.AUTOBALANCE) {
                             driveTrain.setWantedState(DriveStates.AUTOBALANCE);
@@ -136,6 +145,12 @@ public class Autonomous {
                             currentState = AutonStates.DONE;
                         }
                     break;
+                    case TURNING:
+                        System.out.println("Turning state reached (something went wrong");
+                    break;
+                    case COLLECTING:
+                        System.out.println("Collecting state reached (something went wrong");
+                    break;
                     case BALANCING:
                         System.out.println("Balancing state reached (something went wrong )");
                     break;
@@ -178,6 +193,12 @@ public class Autonomous {
                     case TAXIING:
                         System.out.println("Taxiing state reached (something went wrong )");
                     break;
+                    case TURNING:
+                        System.out.println("Turning state reached (something went wrong");
+                    break;
+                    case COLLECTING:
+                        System.out.println("Collecting state reached (something went wrong");
+                    break;
                     case BALANCING:
                         System.out.println("Balancing state reached (something went wrong )");
                     break;
@@ -204,12 +225,80 @@ public class Autonomous {
                             currentState = AutonStates.DONE;
                         }
                     break;
+                    case TURNING:
+                        System.out.println("Turning state reached (something went wrong");
+                    break;
+                    case COLLECTING:
+                        System.out.println("Collecting state reached (something went wrong");
+                    break;
                     case BALANCING:
                         System.out.println("Balancing state reached (something went wrong)");
                     break;
                     case DONE:
                         System.out.println("Done");
                         driveTrain.runArcadeDrive(0, 0);
+                    break;
+                    default:
+                    break;
+                }
+            break;
+            case choiceSix:
+                switch (currentState) {
+                    case STARTING:
+                        manipulator.setWantedState(ManipulatorStates.HIGH);
+                        if (manipulator.isDoneMoving()) {
+                            intake.setWantedState(IntakeStates.PLACING);
+                            currentState = AutonStates.PLACING;
+                        }
+                    break;
+                    case PLACING:
+                        if (placingTicks < 50) {
+                            if (intake.getCurrentState() != IntakeStates.PLACING) {
+                                intake.setWantedState(IntakeStates.PLACING);
+                            }
+                            placingTicks++;
+                        } else {
+                            if (intake.getCurrentState() == IntakeStates.PLACING) {
+                                intake.setWantedState(IntakeStates.IDLE);
+                            }
+                            if (manipulator.getCurrentState() != ManipulatorStates.RETRACTED) {
+                                manipulator.setWantedState(ManipulatorStates.RETRACTED);
+                            } else {
+                                if (manipulator.isDoneMoving()) {
+                                    currentState = AutonStates.TAXIING;
+                                    driveTrain.resetEncoders();
+                                }
+                            }
+                        }
+                    break;
+                    case TAXIING:
+                        if (driveTrain.getEncoderRotations()[0] <= kMobilityTaxiRotations) {
+                            driveTrain.runArcadeDrive(0, .3);
+                        } else {
+                            driveTrain.runArcadeDrive(0, 0);
+                            currentState = AutonStates.TURNING;
+                            rotationHeading = driveTrain.getYaw();
+                        }
+                    break;
+                    case TURNING:
+                        if (Math.abs(driveTrain.getYaw()) + 2.0 > Math.abs(rotationHeading)) {
+                            driveTrain.runArcadeDrive(.3, 0);
+                        } else {
+                            currentState = AutonStates.COLLECTING;
+                        }
+                    break;
+                    case COLLECTING:
+                        if (manipulator.getCurrentState() != ManipulatorStates.FLOOR || intake.getCurrentState() != IntakeStates.INTAKING) {
+                            manipulator.setWantedState(ManipulatorStates.FLOOR);
+                        } else {
+                            System.out.println("Picking up I hope");
+                        }
+                    break;
+                    case BALANCING:
+                        System.out.println("Balancing state reached (something went wrong )");
+                    break;
+                    case DONE:
+                        driveTrain.runArcadeDrive(0,0);
                     break;
                     default:
                     break;
@@ -225,6 +314,8 @@ public class Autonomous {
         STARTING,
         PLACING,
         TAXIING,
+        TURNING,
+        COLLECTING,
         BALANCING,
         DONE
     }
