@@ -13,8 +13,8 @@ public class Intake {
     private CANSparkMax intakeMotor;
 
     // Speeds for the motors on the intake
-    private final double kIntakeSpeed = .5;
-    private final double kPlacingSpeed = -.5;
+    private final double kIntakeSpeed = .9;
+    private final double kPlacingSpeed = -.9;
 
 
     /** Creates the intake object. Sets the default wanted state to idle. */

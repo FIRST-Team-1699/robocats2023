@@ -6,11 +6,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import frc.team1699.subsystems.Autonomous;
+import frc.team1699.subsystems.DriveTrain;
 import frc.team1699.subsystems.Intake;
 import frc.team1699.subsystems.Manipulator;
 import frc.team1699.subsystems.Intake.IntakeStates;
 import frc.team1699.subsystems.Manipulator.ManipulatorStates;
 import frc.team1699.subsystems.Plow;
+import frc.team1699.subsystems.DriveTrain.DriveStates;
 import frc.team1699.subsystems.Plow.PlowStates;
 import frc.team1699.Constants;
 
@@ -25,6 +28,8 @@ public class Robot extends TimedRobot {
   private Manipulator manipulator;
   private Intake intake;
   private Plow plow;
+  private DriveTrain driveTrain;
+  private Autonomous autonomous;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -36,6 +41,9 @@ public class Robot extends TimedRobot {
     manipulator = new Manipulator();
     intake = new Intake();
     plow = new Plow();
+    driveTrain = new DriveTrain(driveJoystick);
+    driveTrain.calibrateGyro();
+    autonomous = new Autonomous(driveTrain, intake, manipulator);
   }
 
   /**
@@ -59,11 +67,15 @@ public class Robot extends TimedRobot {
    * chooser code above as well.
    */
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    autonomous.takeChosenAuto();
+  }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    autonomous.update();
+  }
 
   /** This function is called once when teleop is enabled. */
   @Override
@@ -104,6 +116,12 @@ public class Robot extends TimedRobot {
       plow.setWantedState(PlowStates.OUT);
     } else {
       plow.setWantedState(PlowStates.IN);
+    }
+
+    if(driveJoystick.getRawButton(11)) {
+      driveTrain.setWantedState(DriveStates.AUTOBALANCE);
+    } else {
+      driveTrain.setWantedState(DriveStates.MANUAL);
     }
     
     manipulator.update();

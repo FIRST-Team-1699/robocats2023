@@ -4,8 +4,7 @@ import frc.team1699.Constants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;       
+import com.revrobotics.SparkMaxPIDController;  
 
 /** The telescoping tubes for the arm of our robot are  defined and controlled in this class. */
 public class Telescope {
@@ -118,6 +117,14 @@ public class Telescope {
 
     public static double calculateTelescopeRotations(double percentage) {
         return (percentage / 100) * kMaxRotations;
+    }
+
+    public boolean isDoneMoving() {
+        if (telescopeEncoder.getVelocity() > 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public enum TelescopeStates {

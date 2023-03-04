@@ -59,6 +59,13 @@ public class Manipulator {
         return this.currentState;
     }
 
+    public boolean isDoneMoving() {
+        if(telescope.isDoneMoving() && pivot.isDoneMoving()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public enum ManipulatorStates {
         RETRACTED,
         SHELF,
