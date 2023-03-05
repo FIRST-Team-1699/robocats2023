@@ -16,17 +16,17 @@ package frc.team1699;
 public class Constants {
     // CAN bus ID's
     // GAME PIECE MANIPULATION
-    public static final int kIntakeMotorID = 20;
-    public static final int kTelescopeMotorID = 21;
-    public static final int kPivotMotorID = 22;
-    public static final int kPlowMotorID = 23;
+    // public static final int kIntakeMotorID = 25210;
+    // public static final int kTelescopeMotorID = 781;
+    public static final int kPivotMotorID = 20;
+    // public static final int kPlowMotorID = 33;
     // DRIVETRAIN
-    public static final int kPortLeaderID = 24;
-    public static final int kPortFollowerOneID = 25;
-    public static final int kPortFollowerTwoID = 26;
+    public static final int kPortLeaderID = 21;
+    public static final int kPortFollowerOneID = 22;
+    public static final int kPortFollowerTwoID = 28;
 
-    public static final int kStarLeaderID = 27;
-    public static final int kStarFollowerOneID = 28;
+    public static final int kStarLeaderID = 24;
+    public static final int kStarFollowerOneID = 25;
     public static final int kStarFollowerTwoID = 29;
 
     // JOYSTICKS

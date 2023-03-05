@@ -6,15 +6,15 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import frc.team1699.subsystems.Autonomous;
+//import frc.team1699.subsystems.Autonomous;
 import frc.team1699.subsystems.DriveTrain;
-import frc.team1699.subsystems.Intake;
-import frc.team1699.subsystems.Manipulator;
-import frc.team1699.subsystems.Intake.IntakeStates;
-import frc.team1699.subsystems.Manipulator.ManipulatorStates;
-import frc.team1699.subsystems.Plow;
+//import frc.team1699.subsystems.Intake;
+//import frc.team1699.subsystems.Manipulator;
+//import frc.team1699.subsystems.Intake.IntakeStates;
+//import frc.team1699.subsystems.Manipulator.ManipulatorStates;
+//import frc.team1699.subsystems.Plow;
 import frc.team1699.subsystems.DriveTrain.DriveStates;
-import frc.team1699.subsystems.Plow.PlowStates;
+//import frc.team1699.subsystems.Plow.PlowStates;
 import frc.team1699.Constants;
 
 /**
@@ -25,11 +25,11 @@ import frc.team1699.Constants;
  */
 public class Robot extends TimedRobot {
   private Joystick driveJoystick;
-  private Manipulator manipulator;
-  private Intake intake;
-  private Plow plow;
+  //private Manipulator manipulator;
+  //private Intake intake;
+  //private Plow plow;
   private DriveTrain driveTrain;
-  private Autonomous autonomous;
+  //private Autonomous autonomous;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -38,12 +38,12 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     driveJoystick = new Joystick(Constants.kDriveJoystickPort);
-    manipulator = new Manipulator();
-    intake = new Intake();
-    plow = new Plow();
+    //manipulator = new Manipulator();
+    //intake = new Intake();
+    //plow = new Plow();
     driveTrain = new DriveTrain(driveJoystick);
     driveTrain.calibrateGyro();
-    autonomous = new Autonomous(driveTrain, intake, manipulator);
+    //autonomous = new Autonomous(driveTrain, intake, manipulator);
   }
 
   /**
@@ -68,65 +68,68 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    autonomous.takeChosenAuto();
+    //autonomous.takeChosenAuto();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    autonomous.update();
+    //autonomous.update();
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    driveTrain.setWantedState(DriveStates.MANUAL);
+  }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if(driveJoystick.getRawButton(1)){
-      intake.setWantedState(IntakeStates.INTAKING);
-    }
+    // if(driveJoystick.getRawButton(1)){
+    //   intake.setWantedState(IntakeStates.INTAKING);
+    // }
 
-    if(driveJoystick.getRawButton(2)){
-      intake.setWantedState(IntakeStates.PLACING);
-    }
+    // if(driveJoystick.getRawButton(2)){
+    //   intake.setWantedState(IntakeStates.PLACING);
+    // }
 
-    if(driveJoystick.getRawButtonReleased(1) || driveJoystick.getRawButtonReleased(2)){
-      intake.setWantedState(IntakeStates.IDLE);
-    }
+    // if(driveJoystick.getRawButtonReleased(1) || driveJoystick.getRawButtonReleased(2)){
+    //   intake.setWantedState(IntakeStates.IDLE);
+    // }
 
-    if(driveJoystick.getRawButtonPressed(8)){
-      System.out.println(intake.getCurrentState());
-    }
+    // if(driveJoystick.getRawButtonPressed(8)){
+    //   System.out.println(intake.getCurrentState());
+    // }
 
-    if(driveJoystick.getRawButton(3)){
-      manipulator.setWantedState(ManipulatorStates.HIGH);
-    }
+    // if(driveJoystick.getRawButton(3)){
+    //   manipulator.setWantedState(ManipulatorStates.HIGH);
+    // }
 
-    if(driveJoystick.getRawButton(4)){
-      manipulator.setWantedState(ManipulatorStates.LOW);
-    }
+    // if(driveJoystick.getRawButton(4)){
+    //   manipulator.setWantedState(ManipulatorStates.LOW);
+    // }
 
-    if(driveJoystick.getRawButtonReleased(3) || driveJoystick.getRawButtonReleased(4)){
-      manipulator.setWantedState(ManipulatorStates.RETRACTED);
-    }
+    // if(driveJoystick.getRawButtonReleased(3) || driveJoystick.getRawButtonReleased(4)){
+    //   manipulator.setWantedState(ManipulatorStates.RETRACTED);
+    // }
 
-    if(driveJoystick.getRawButton(6)) {
-      plow.setWantedState(PlowStates.OUT);
-    } else {
-      plow.setWantedState(PlowStates.IN);
-    }
+    // if(driveJoystick.getRawButton(6)) {
+    //   plow.setWantedState(PlowStates.OUT);
+    // } else {
+    //   plow.setWantedState(PlowStates.IN);
+    // }
 
-    if(driveJoystick.getRawButton(11)) {
-      driveTrain.setWantedState(DriveStates.AUTOBALANCE);
-    } else {
-      driveTrain.setWantedState(DriveStates.MANUAL);
-    }
+    // if(driveJoystick.getRawButton(11)) {
+    //   driveTrain.setWantedState(DriveStates.AUTOBALANCE);
+    // } else {
+    //   driveTrain.setWantedState(DriveStates.MANUAL);
+    // }
     
-    manipulator.update();
-    intake.update();
-    plow.update();
+    // manipulator.update();
+    // intake.update();
+    // plow.update();
+    driveTrain.update();
   }
 
   /** This function is called once when the robot is disabled. */

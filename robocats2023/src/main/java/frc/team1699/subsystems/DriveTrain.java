@@ -76,7 +76,7 @@ public class DriveTrain {
 
         // deadband, makes it easier/possible to drive straight since it doesn't take tiny inputs
         //TODO: tune deadband?
-        if(currentState == DriveStates.MANUAL && rotate < kDeadZone) {
+        if(currentState == DriveStates.MANUAL && Math.abs(rotate) < kDeadZone) {
             rotate = 0;
         }
 
@@ -113,6 +113,7 @@ public class DriveTrain {
         switch(currentState) {
             case MANUAL:
                 runArcadeDrive(joystick.getX(), -joystick.getY());
+                System.out.println("Tryna drive");
             break;
             case AUTOBALANCE:
                 runArcadeDrive(centerController.calculate(getYaw()), balanceController.calculate(getPitch()));
@@ -150,7 +151,7 @@ public class DriveTrain {
     public double[] getEncoderRotations() {
         return new double[]{portEncoder.getPosition(), starEncoder.getPosition()};
     }
-    
+
     public void calibrateGyro() {
         this.gyro.calibrate();
     }
