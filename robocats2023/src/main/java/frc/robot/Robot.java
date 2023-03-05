@@ -6,11 +6,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Joystick;
-//import frc.team1699.subsystems.Autonomous;
+import frc.team1699.subsystems.Autonomous;
 import frc.team1699.subsystems.DriveTrain;
-//import frc.team1699.subsystems.Intake;
+import frc.team1699.subsystems.Intake;
 import frc.team1699.subsystems.Manipulator;
-//import frc.team1699.subsystems.Intake.IntakeStates;
+import frc.team1699.subsystems.Intake.IntakeStates;
 import frc.team1699.subsystems.Manipulator.ManipulatorStates;
 //import frc.team1699.subsystems.Plow;
 import frc.team1699.subsystems.DriveTrain.DriveStates;
@@ -26,10 +26,10 @@ import frc.team1699.Constants;
 public class Robot extends TimedRobot {
   private Joystick driveJoystick, opJoystick;
   private Manipulator manipulator;
-  //private Intake intake;
+  private Intake intake;
   //private Plow plow;
   private DriveTrain driveTrain;
-  //private Autonomous autonomous;
+  private Autonomous autonomous;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -40,11 +40,11 @@ public class Robot extends TimedRobot {
     driveJoystick = new Joystick(Constants.kDriveJoystickPort);
     opJoystick = new Joystick(Constants.kOperatorJoystickPort);
     manipulator = new Manipulator();
-    //intake = new Intake();
+    intake = new Intake();
     //plow = new Plow();
     driveTrain = new DriveTrain(driveJoystick);
     driveTrain.calibrateGyro();
-    //autonomous = new Autonomous(driveTrain, intake, manipulator);
+    autonomous = new Autonomous(driveTrain, intake, manipulator);
   }
 
   /**
@@ -55,7 +55,9 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    manipulator.printTelescopeEncoder();
+  }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -69,13 +71,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    //autonomous.takeChosenAuto();
+    autonomous.takeChosenAuto();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    //autonomous.update();
+    autonomous.update();
   }
 
   /** This function is called once when teleop is enabled. */
@@ -88,17 +90,17 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // DRIVER STICK
-    // if(driveJoystick.getRawButton(1)){
-    //   intake.setWantedState(IntakeStates.INTAKING);
-    // }
+    if(driveJoystick.getRawButton(3)){
+      intake.setWantedState(IntakeStates.INTAKING);
+    }
 
-    // if(driveJoystick.getRawButton(2)){
-    //   intake.setWantedState(IntakeStates.PLACING);
-    // }
+    if(driveJoystick.getRawButton(4)){
+      intake.setWantedState(IntakeStates.PLACING);
+    }
 
-    // if(driveJoystick.getRawButtonReleased(1) || driveJoystick.getRawButtonReleased(2)){
-    //   intake.setWantedState(IntakeStates.IDLE);
-    // }
+    if(driveJoystick.getRawButtonReleased(3) || driveJoystick.getRawButtonReleased(4)){
+      intake.setWantedState(IntakeStates.IDLE);
+    }
 
     // if(driveJoystick.getRawButtonPressed(5)) {
     //   if(plow.getCurrentState() == PlowStates.OUT) {
@@ -112,12 +114,20 @@ public class Robot extends TimedRobot {
       driveTrain.setWantedState(DriveStates.AUTOBALANCE);
     } else {
       driveTrain.setWantedState(DriveStates.MANUAL);
-    }
+    } 
 
     // OPERATOR STICK
     // FLOOR POSITION
+    // if(opJoystick.getRawButtonPressed(3)) {
+    //   manipulator.setWantedState(ManipulatorStates.FLOOR);
+    // }
+
     if(opJoystick.getRawButtonPressed(3)) {
-      manipulator.setWantedState(ManipulatorStates.FLOOR);
+      manipulator.incrementTelescopePosition();
+    }
+
+    if(opJoystick.getRawButtonPressed(4)) {
+      manipulator.decrementTelescopePosition();
     }
 
     // LOW
@@ -150,8 +160,16 @@ public class Robot extends TimedRobot {
       manipulator.setWantedState(ManipulatorStates.STORED_FRONT);
     }
     
+    if(opJoystick.getRawButtonPressed(6)) {
+      manipulator.incrementPivotPosition();
+    }
+
+    if(opJoystick.getRawButtonPressed(5)) {
+      manipulator.decrementPivotPosition();
+    }
+
     manipulator.update();
-    // intake.update();
+    intake.update();
     // plow.update();
     driveTrain.update();
   }

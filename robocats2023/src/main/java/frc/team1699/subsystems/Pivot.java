@@ -6,6 +6,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 /** The pivot class controls the rotation of the arm. */
 public class Pivot {
@@ -17,15 +18,15 @@ public class Pivot {
     private RelativeEncoder pivotEncoder;
     private SparkMaxPIDController pivotSpeedLoop;
 
-    private final double kPivotP = .2;
+    private final double kPivotP = .1;
     private final double kPivotI = 0;
     private final double kPivotD = 0;
 
     private final double kBackStoredPosition = 0;
     private final double kShelfPosition = 120;
     private final double kHighCubePosition = 0;
-    private final double kMidCubePosition = 0;
-    private final double kLowCubePosition = 0;
+    private final double kMidCubePosition = 180;
+    private final double kLowCubePosition = 180;
     private final double kFloorPosition = 0;
     private final double kFrontStoredPosition = 246;
     private double wantedPosition = 0;
@@ -34,12 +35,14 @@ public class Pivot {
     /** Creates the pivot object, sets the default state to default */
     public Pivot(){ 
         pivotMotor = new CANSparkMax(Constants.kPivotMotorID, MotorType.kBrushless);
+        pivotMotor.setIdleMode(IdleMode.kBrake);
         pivotEncoder = pivotMotor.getEncoder();
+        pivotEncoder.setPosition(0);
         pivotSpeedLoop = pivotMotor.getPIDController();
         pivotSpeedLoop.setP(kPivotP);
         pivotSpeedLoop.setI(kPivotI);
         pivotSpeedLoop.setD(kPivotD);
-        pivotSpeedLoop.setOutputRange(-1, 1);
+        pivotSpeedLoop.setOutputRange(-.5, 5);
         this.currentState = PivotStates.STORED;
     }
 
@@ -120,6 +123,11 @@ public class Pivot {
     
     public void incrementWantedPosition() {
         wantedPosition++;
+        pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
+    }
+
+    public void decrementWantedPosition() {
+        wantedPosition--;
         pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
     }
 
