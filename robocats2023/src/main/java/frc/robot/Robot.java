@@ -122,11 +122,11 @@ public class Robot extends TimedRobot {
     //   manipulator.setWantedState(ManipulatorStates.FLOOR);
     // }
 
-    if(opJoystick.getRawButtonPressed(3)) {
+    if(opJoystick.getRawButton(3)) {
       manipulator.incrementTelescopePosition();
     }
 
-    if(opJoystick.getRawButtonPressed(4)) {
+    if(opJoystick.getRawButton(4)) {
       manipulator.decrementTelescopePosition();
     }
 
@@ -160,11 +160,11 @@ public class Robot extends TimedRobot {
       manipulator.setWantedState(ManipulatorStates.STORED_FRONT);
     }
     
-    if(opJoystick.getRawButtonPressed(6)) {
+    if(opJoystick.getRawButton(6)) {
       manipulator.incrementPivotPosition();
     }
 
-    if(opJoystick.getRawButtonPressed(5)) {
+    if(opJoystick.getRawButton(5)) {
       manipulator.decrementPivotPosition();
     }
 
