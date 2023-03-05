@@ -17,8 +17,8 @@ public class Constants {
     // CAN bus ID's
     // GAME PIECE MANIPULATION
     // public static final int kIntakeMotorID = 25210;
-    // public static final int kTelescopeMotorID = 781;
-    public static final int kPivotMotorID = 20;
+    public static final int kTelescopeMotorID = 26;
+    public static final int kPivotMotorID = 26;
     // public static final int kPlowMotorID = 33;
     // DRIVETRAIN
     public static final int kPortLeaderID = 21;

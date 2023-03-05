@@ -113,7 +113,6 @@ public class DriveTrain {
         switch(currentState) {
             case MANUAL:
                 runArcadeDrive(joystick.getX(), -joystick.getY());
-                System.out.println("Tryna drive");
             break;
             case AUTOBALANCE:
                 runArcadeDrive(centerController.calculate(getYaw()), balanceController.calculate(getPitch()));

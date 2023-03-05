@@ -22,6 +22,15 @@ package frc.team1699.subsystems;
 //     private final double kMinOutput = -.5;
 //     private final double kMaxOutput = .5;
     
+//     // Positional constants
+//     private final double kStoredPercent = 0;
+//     private final double kShelfPercent = 0;
+//     private final double kHighPercent = 0;
+//     private final double kMidPercent = 0;
+//     private final double kLowPercent = 0;
+//     private final double kStoredFrontPercent = 0;
+//     private final double kFloorPercent = 0;
+
 //     private double wantedPercentage = 0;
 //     private double wantedPosition = calculateTelescopeRotations(wantedPercentage);
 
@@ -39,12 +48,12 @@ package frc.team1699.subsystems;
 //         telescopeSpeedLoop.setI(kTelescopeI);
 //         telescopeSpeedLoop.setD(kTelescopeD);
 //         telescopeSpeedLoop.setOutputRange(kMinOutput, kMaxOutput);
-//         this.currentState = TelescopeStates.RETRACTED;
+//         this.currentState = TelescopeStates.STORED;
 //     }
 
 //     public void update(){
 //         switch (currentState){
-//             case RETRACTED:
+//             case STORED:
                 
 //             break;
 //             case SHELF:
@@ -58,6 +67,9 @@ package frc.team1699.subsystems;
 //             break;
 //             case LOW:
                 
+//             break;
+//             case STORED_FRONT:
+
 //             break;
 //             case FLOOR:
                
@@ -79,30 +91,33 @@ package frc.team1699.subsystems;
 
 //     public void handleStateTransition() {
 //         switch (wantedState) {
-//             case RETRACTED:
-//                 wantedPercentage = 30;
+//             case STORED:
+//                 wantedPercentage = kStoredPercent;
 //             break;
 //             case SHELF:
-//                 wantedPercentage = 30;
+//                 wantedPercentage = kShelfPercent;
 //             break;
 //             case HIGH:
-//                 wantedPercentage = 30;
+//                 wantedPercentage = kHighPercent;
 //             break;
 //             case MID:
-//                 wantedPercentage = 30;
+//                 wantedPercentage = kMidPercent;
 //             break;
 //             case LOW:
-//                 wantedPercentage = 30;
+//                 wantedPercentage = kLowPercent;
+//             break;
+//             case STORED_FRONT:
+//                 wantedPercentage = kStoredFrontPercent;
 //             break;
 //             case FLOOR:
-//                 wantedPercentage = 30;
+//                 wantedPercentage = kFloorPercent;
 //             break;
 //             default:
 //             break;
 //         }
         
-//         wantedPosition = calculateTelescopeRotations(wantedPercentage);
-//         telescopeSpeedLoop.setReference(wantedPosition, CANSparkMax.ControlType.kPosition);
+//         // wantedPosition = calculateTelescopeRotations(wantedPercentage);
+//         // telescopeSpeedLoop.setReference(wantedPosition, CANSparkMax.ControlType.kPosition);
 //         this.currentState = this.wantedState;
 //     }
 
@@ -127,11 +142,12 @@ package frc.team1699.subsystems;
 //     }
 
 //     public enum TelescopeStates {
-//         RETRACTED,
+//         STORED,
 //         SHELF,
 //         HIGH,
 //         MID,
 //         LOW,
+//         STORED_FRONT,
 //         FLOOR
 //     }
 // }

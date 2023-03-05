@@ -17,11 +17,19 @@ public class Pivot {
     private RelativeEncoder pivotEncoder;
     private SparkMaxPIDController pivotSpeedLoop;
 
-    private final double kPivotP = 0;
+    private final double kPivotP = .2;
     private final double kPivotI = 0;
     private final double kPivotD = 0;
 
+    private final double kBackStoredPosition = 0;
+    private final double kShelfPosition = 120;
+    private final double kHighCubePosition = 0;
+    private final double kMidCubePosition = 0;
+    private final double kLowCubePosition = 0;
+    private final double kFloorPosition = 0;
+    private final double kFrontStoredPosition = 246;
     private double wantedPosition = 0;
+
 
     /** Creates the pivot object, sets the default state to default */
     public Pivot(){ 
@@ -31,7 +39,7 @@ public class Pivot {
         pivotSpeedLoop.setP(kPivotP);
         pivotSpeedLoop.setI(kPivotI);
         pivotSpeedLoop.setD(kPivotD);
-        pivotSpeedLoop.setOutputRange(-.5, .5);
+        pivotSpeedLoop.setOutputRange(-1, 1);
         this.currentState = PivotStates.STORED;
     }
 
@@ -43,22 +51,13 @@ public class Pivot {
             case SHELF:
 
             break;
-            case HIGHCUBE:
+            case HIGH:
 
             break;
-            case MIDCUBE:
+            case MID:
 
             break;
-            case LOWCUBE:
-
-            break;
-            case HIGHCONE:
-
-            break;
-            case MIDCONE:
-
-            break;
-            case LOWCONE:
+            case LOW:
 
             break;
             case FLOOR:
@@ -72,33 +71,28 @@ public class Pivot {
     public void handleStateTransition(){
         switch (wantedState){
             case STORED:
-
+                wantedPosition = kBackStoredPosition;
             break;
             case SHELF:
-
+                wantedPosition = kShelfPosition;
             break;
-            case HIGHCUBE:
-
+            case HIGH:
+                wantedPosition = kHighCubePosition;
             break;
-            case MIDCUBE:
-
+            case MID:
+                wantedPosition = kMidCubePosition;
             break;
-            case LOWCUBE:
-
-            break;
-            case HIGHCONE:
-
-            break;
-            case MIDCONE:
-
-            break;
-            case LOWCONE:
-
+            case LOW:
+                wantedPosition = kLowCubePosition;
             break;
             case FLOOR:
-
+                wantedPosition = kFloorPosition;
+            break;
+            case STORED_FRONT:
+                wantedPosition = kFrontStoredPosition;
             break;
             default:
+                wantedPosition = 0;
             break;
         }
         pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
@@ -124,15 +118,18 @@ public class Pivot {
         }
     }
     
+    public void incrementWantedPosition() {
+        wantedPosition++;
+        pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
+    }
+
     public enum PivotStates {
         STORED,
         SHELF,
-        HIGHCUBE,
-        MIDCUBE,
-        LOWCUBE,
-        HIGHCONE,
-        MIDCONE,
-        LOWCONE,
-        FLOOR
+        HIGH,
+        MID,
+        LOW,
+        FLOOR,
+        STORED_FRONT
     }
 }

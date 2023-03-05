@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.Joystick;
 //import frc.team1699.subsystems.Autonomous;
 import frc.team1699.subsystems.DriveTrain;
 //import frc.team1699.subsystems.Intake;
-//import frc.team1699.subsystems.Manipulator;
+import frc.team1699.subsystems.Manipulator;
 //import frc.team1699.subsystems.Intake.IntakeStates;
-//import frc.team1699.subsystems.Manipulator.ManipulatorStates;
+import frc.team1699.subsystems.Manipulator.ManipulatorStates;
 //import frc.team1699.subsystems.Plow;
 import frc.team1699.subsystems.DriveTrain.DriveStates;
 //import frc.team1699.subsystems.Plow.PlowStates;
@@ -24,8 +24,8 @@ import frc.team1699.Constants;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Joystick driveJoystick;
-  //private Manipulator manipulator;
+  private Joystick driveJoystick, opJoystick;
+  private Manipulator manipulator;
   //private Intake intake;
   //private Plow plow;
   private DriveTrain driveTrain;
@@ -38,7 +38,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     driveJoystick = new Joystick(Constants.kDriveJoystickPort);
-    //manipulator = new Manipulator();
+    opJoystick = new Joystick(Constants.kOperatorJoystickPort);
+    manipulator = new Manipulator();
     //intake = new Intake();
     //plow = new Plow();
     driveTrain = new DriveTrain(driveJoystick);
@@ -86,6 +87,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    // DRIVER STICK
     // if(driveJoystick.getRawButton(1)){
     //   intake.setWantedState(IntakeStates.INTAKING);
     // }
@@ -98,35 +100,57 @@ public class Robot extends TimedRobot {
     //   intake.setWantedState(IntakeStates.IDLE);
     // }
 
-    // if(driveJoystick.getRawButtonPressed(8)){
-    //   System.out.println(intake.getCurrentState());
+    // if(driveJoystick.getRawButtonPressed(5)) {
+    //   if(plow.getCurrentState() == PlowStates.OUT) {
+    //     plow.setWantedState(PlowStates.IN);
+    //   } else {
+    //     plow.setWantedState(PlowStates.OUT);
+    //   }
     // }
 
-    // if(driveJoystick.getRawButton(3)){
-    //   manipulator.setWantedState(ManipulatorStates.HIGH);
-    // }
+    if(driveJoystick.getRawButton(11)) {
+      driveTrain.setWantedState(DriveStates.AUTOBALANCE);
+    } else {
+      driveTrain.setWantedState(DriveStates.MANUAL);
+    }
 
-    // if(driveJoystick.getRawButton(4)){
-    //   manipulator.setWantedState(ManipulatorStates.LOW);
-    // }
+    // OPERATOR STICK
+    // FLOOR POSITION
+    if(opJoystick.getRawButtonPressed(3)) {
+      manipulator.setWantedState(ManipulatorStates.FLOOR);
+    }
 
-    // if(driveJoystick.getRawButtonReleased(3) || driveJoystick.getRawButtonReleased(4)){
-    //   manipulator.setWantedState(ManipulatorStates.RETRACTED);
-    // }
+    // LOW
+    if(opJoystick.getRawButtonPressed(11)) {
+      manipulator.setWantedState(ManipulatorStates.LOW);
+    }
 
-    // if(driveJoystick.getRawButton(6)) {
-    //   plow.setWantedState(PlowStates.OUT);
-    // } else {
-    //   plow.setWantedState(PlowStates.IN);
-    // }
+    // MID
+    if(opJoystick.getRawButtonPressed(9)) {
+      manipulator.setWantedState(ManipulatorStates.MID);
+    }
 
-    // if(driveJoystick.getRawButton(11)) {
-    //   driveTrain.setWantedState(DriveStates.AUTOBALANCE);
-    // } else {
-    //   driveTrain.setWantedState(DriveStates.MANUAL);
-    // }
+    // HIGH
+    if(opJoystick.getRawButtonPressed(7)) {
+      manipulator.setWantedState(ManipulatorStates.HIGH);
+    }
+
+    // SHELF
+    if(opJoystick.getRawButtonPressed(12)) {
+      manipulator.setWantedState(ManipulatorStates.SHELF);
+    }
+
+    // STORED BACK
+    if(opJoystick.getRawButtonPressed(10)) {
+      manipulator.setWantedState(ManipulatorStates.STORED);
+    }
+
+    // STORED FRONT
+    if(opJoystick.getRawButtonPressed(8)) {
+      manipulator.setWantedState(ManipulatorStates.STORED_FRONT);
+    }
     
-    // manipulator.update();
+    manipulator.update();
     // intake.update();
     // plow.update();
     driveTrain.update();
