@@ -24,10 +24,10 @@ public class Pivot {
 
     private final double kBackStoredPosition = 0;
     private final double kShelfPosition = 120;
-    private final double kHighCubePosition = 0;
-    private final double kMidCubePosition = 180;
-    private final double kLowCubePosition = 180;
-    private final double kFloorPosition = 0;
+    private final double kHighCubePosition = 170;
+    private final double kMidCubePosition = 200;
+    private final double kLowCubePosition = 220;
+    private final double kFloorPosition = 230;
     private final double kFrontStoredPosition = 246;
     private double wantedPosition = 0;
 
@@ -37,7 +37,6 @@ public class Pivot {
         pivotMotor = new CANSparkMax(Constants.kPivotMotorID, MotorType.kBrushless);
         pivotMotor.setIdleMode(IdleMode.kBrake);
         pivotEncoder = pivotMotor.getEncoder();
-        pivotEncoder.setPosition(0);
         pivotSpeedLoop = pivotMotor.getPIDController();
         pivotSpeedLoop.setP(kPivotP);
         pivotSpeedLoop.setI(kPivotI);

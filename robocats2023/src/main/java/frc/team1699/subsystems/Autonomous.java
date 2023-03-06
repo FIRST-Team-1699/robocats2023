@@ -21,7 +21,7 @@ public class Autonomous {
     private static int placingTicks = 0;
     private static double rotationHeading = 0;
     // TODO: TUNE
-    private final int kMobilityTaxiRotations = 500;
+    private final int kMobilityTaxiRotations = -500;
 
     // robot components
     private DriveTrain driveTrain;

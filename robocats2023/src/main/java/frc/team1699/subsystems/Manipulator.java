@@ -53,7 +53,7 @@ public class Manipulator {
             break;
             default:
             break;
-        }
+        }                                                                                               
         this.currentState = this.wantedState;
     }
 

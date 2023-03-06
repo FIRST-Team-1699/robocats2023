@@ -2,6 +2,7 @@ package frc.team1699.subsystems;
 
 import frc.team1699.Constants;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /** The intake class controls the spinning of the intake wheels. */
@@ -21,6 +22,7 @@ public class Intake {
     /** Creates the intake object. Sets the default wanted state to idle. */
     public Intake() {
         intakeMotor = new CANSparkMax(Constants.kIntakeMotorID, MotorType.kBrushless);
+        intakeMotor.setIdleMode(IdleMode.kBrake);
         this.currentState = IntakeStates.IDLE;
     }
 

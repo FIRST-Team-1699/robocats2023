@@ -44,7 +44,6 @@ public class Telescope {
     public Telescope() {
         telescopeMotor = new CANSparkMax(Constants.kTelescopeMotorID, MotorType.kBrushless);
         telescopeMotor.setIdleMode(IdleMode.kBrake);
-        telescopeEncoder = telescopeMotor.getEncoder();
         telescopeEncoder.setPosition(0);
         telescopeSpeedLoop = telescopeMotor.getPIDController();
         telescopeSpeedLoop.setFeedbackDevice(telescopeEncoder);
@@ -91,6 +90,7 @@ public class Telescope {
         }
     }
 
+    // TODO: needs to be tuned, decide if using percentages is good and if it works 
     public void handleStateTransition() {
         switch (wantedState) {
             case STORED:
