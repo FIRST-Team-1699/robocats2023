@@ -18,7 +18,7 @@ public class Telescope {
     private SparkMaxPIDController telescopeSpeedLoop;
 
     // creates the PIDController values for the telescoping arm
-    private final double kTelescopeP = .25;
+    private final double kTelescopeP = .5;
     private final double kTelescopeI = 0.000000000;
     private final double kTelescopeD = 0.2;
     private final double kMinOutput = -.5;
@@ -27,11 +27,12 @@ public class Telescope {
     // Positional constants
     private final double kStoredPercent = 0;
     private final double kShelfPercent = 0;
-    private final double kHighPercent = 0;
+    private final double kHighPercent = 367;
     private final double kMidPercent = 128;
     private final double kLowPercent = 0;
     private final double kStoredFrontPercent = 0;
     private final double kFloorPercent = 0;
+    private final double kCubeHighShootPosition = 0;
 
     private double wantedPercentage = 0;
     private double wantedPosition = calculateTelescopeRotations(wantedPercentage);
@@ -44,7 +45,7 @@ public class Telescope {
     public Telescope() {
         telescopeMotor = new CANSparkMax(Constants.kTelescopeMotorID, MotorType.kBrushless);
         telescopeMotor.setIdleMode(IdleMode.kBrake);
-        telescopeEncoder.setPosition(0);
+        telescopeEncoder = telescopeMotor.getEncoder();
         telescopeSpeedLoop = telescopeMotor.getPIDController();
         telescopeSpeedLoop.setFeedbackDevice(telescopeEncoder);
         telescopeSpeedLoop.setP(kTelescopeP);
@@ -86,8 +87,8 @@ public class Telescope {
     public void setWantedState(TelescopeStates wantedState) {
         if(wantedState != this.wantedState){
             this.wantedState = wantedState;
-            handleStateTransition();
         }
+        handleStateTransition();
     }
 
     // TODO: needs to be tuned, decide if using percentages is good and if it works 
@@ -121,6 +122,9 @@ public class Telescope {
                 wantedPercentage = kFloorPercent;
                 wantedPosition = kFloorPercent;
             break;
+            case CUBE_SHOOT_HIGH:
+                wantedPosition = kCubeHighShootPosition;
+            break;
             default:
             break;
         }
@@ -147,12 +151,12 @@ public class Telescope {
     }
 
     public void incrementTelescopePosition() {
-        wantedPosition++;
+        wantedPosition += 1;
         telescopeSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
     }
 
     public void decrementTelescopePosition() {
-        wantedPosition--;
+        wantedPosition -= 1;
         telescopeSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
     }
 
@@ -164,6 +168,10 @@ public class Telescope {
         }
     }
 
+    public void setBrakeMode() {
+        telescopeMotor.setIdleMode(IdleMode.kBrake);
+    }
+
     public enum TelescopeStates {
         STORED,
         SHELF,
@@ -171,6 +179,7 @@ public class Telescope {
         MID,
         LOW,
         STORED_FRONT,
-        FLOOR
+        FLOOR,
+        CUBE_SHOOT_HIGH
     }
 }

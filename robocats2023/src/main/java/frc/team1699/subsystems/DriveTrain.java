@@ -11,7 +11,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class DriveTrain {
-    private final double kDeadZone = 0.25;
+    private final double kDeadZone = 0;
     private DriveStates wantedState, currentState;
 
     // MOTORS

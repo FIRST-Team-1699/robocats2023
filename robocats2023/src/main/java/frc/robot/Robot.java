@@ -44,7 +44,6 @@ public class Robot extends TimedRobot {
     //plow = new Plow();
     driveTrain = new DriveTrain(driveJoystick);
     driveTrain.calibrateGyro();
-    autonomous = new Autonomous(driveTrain, intake, manipulator);
   }
 
   /**
@@ -56,7 +55,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    manipulator.printTelescopeEncoder();
+    manipulator.printEncoderPositions();
   }
 
   /**
@@ -71,7 +70,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    autonomous.takeChosenAuto();
+    autonomous = new Autonomous(driveTrain, intake, manipulator);
+    autonomous.prepareForAuto();
   }
 
   /** This function is called periodically during autonomous. */
@@ -123,11 +123,15 @@ public class Robot extends TimedRobot {
     // }
 
     if(opJoystick.getRawButton(3)) {
+      manipulator.setWantedState(ManipulatorStates.FLOOR);
+    }
+
+    if(opJoystick.getPOV() == 0) {
       manipulator.incrementTelescopePosition();
     }
 
-    if(opJoystick.getRawButton(4)) {
-      manipulator.decrementTelescopePosition();
+    if(opJoystick.getPOV() == 180) {
+      manipulator.decrementPivotPosition();
     }
 
     // LOW
@@ -142,7 +146,7 @@ public class Robot extends TimedRobot {
 
     // HIGH
     if(opJoystick.getRawButtonPressed(7)) {
-      manipulator.setWantedState(ManipulatorStates.HIGH);
+      manipulator.setWantedState(ManipulatorStates.CUBE_SHOOT_HIGH);
     }
 
     // SHELF
@@ -168,10 +172,15 @@ public class Robot extends TimedRobot {
       manipulator.decrementPivotPosition();
     }
 
+    if(opJoystick.getRawButton(2)) {
+      manipulator.resetTelescopeEncoder();
+    }
+
     manipulator.update();
     intake.update();
     // plow.update();
     driveTrain.update();
+    manipulator.setBrakeMode();
   }
 
   /** This function is called once when the robot is disabled. */

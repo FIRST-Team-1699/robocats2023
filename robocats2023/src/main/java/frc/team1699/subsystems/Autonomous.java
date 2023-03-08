@@ -21,7 +21,7 @@ public class Autonomous {
     private static int placingTicks = 0;
     private static double rotationHeading = 0;
     // TODO: TUNE
-    private final int kMobilityTaxiRotations = -500;
+    private final double kMobilityTaxiRotations = 15;
 
     // robot components
     private DriveTrain driveTrain;
@@ -45,11 +45,15 @@ public class Autonomous {
         currentState = AutonStates.STARTING;
     }
 
-    public void takeChosenAuto() {
+    public void prepareForAuto() {
+        System.out.println("Auton chosen");
         this.autonChoice = autonChooser.getSelected();
+        System.out.println(this.autonChoice);
+        driveTrain.resetEncoders();
     }
 
     public void update() {
+        System.out.println("Updating auton");
         switch (autonChoice) {
             case choiceOne:
                 // do nothing lol
@@ -66,8 +70,8 @@ public class Autonomous {
                     break;
                     case PLACING:
                         if (placingTicks < 50) {
-                            if (intake.getCurrentState() != IntakeStates.PLACING) {
-                                intake.setWantedState(IntakeStates.PLACING);
+                            if (intake.getCurrentState() != IntakeStates.PLACING_AUTO) {
+                                intake.setWantedState(IntakeStates.PLACING_AUTO);
                             }
                             placingTicks++;
                         } else {
@@ -164,9 +168,10 @@ public class Autonomous {
             case choiceFour:
                 switch (currentState) {
                     case STARTING:
-                        manipulator.setWantedState(ManipulatorStates.HIGH);
+                        manipulator.setWantedState(ManipulatorStates.CUBE_SHOOT_HIGH);
+                        intake.setWantedState(IntakeStates.INTAKING_AUTO);
                         if (manipulator.isDoneMoving()) {
-                            intake.setWantedState(IntakeStates.PLACING);
+                            intake.setWantedState(IntakeStates.PLACING_AUTO);
                             currentState = AutonStates.PLACING;
                         }
                     break;
@@ -185,7 +190,6 @@ public class Autonomous {
                             } else {
                                 if (manipulator.isDoneMoving()) {
                                     currentState = AutonStates.DONE;
-                                    driveTrain.resetEncoders();
                                 }
                             }
                         }
@@ -209,17 +213,20 @@ public class Autonomous {
                 }
             break;
             case choiceFive:
+                System.out.println("doing mobility only auto");
+                System.out.println(driveTrain.getEncoderRotations()[0]);
                 switch (currentState) {
                     case STARTING:
                         currentState = AutonStates.TAXIING;
+                        System.out.println("Starting");
                         driveTrain.resetEncoders();
                     break;
                     case PLACING:
                         System.out.println("Placing state reached (something went wrong )");
                     break;
                     case TAXIING:
-                        if (driveTrain.getEncoderRotations()[0] <= kMobilityTaxiRotations) {
-                            driveTrain.runArcadeDrive(0, .3);
+                        if (Math.abs(driveTrain.getEncoderRotations()[0]) <= kMobilityTaxiRotations) {
+                            driveTrain.runArcadeDrive(0, -.3);
                         } else {
                             driveTrain.runArcadeDrive(0, 0);
                             currentState = AutonStates.DONE;
@@ -272,7 +279,7 @@ public class Autonomous {
                         }
                     break;
                     case TAXIING:
-                        if (driveTrain.getEncoderRotations()[0] <= kMobilityTaxiRotations) {
+                        if (Math.abs(driveTrain.getEncoderRotations()[0]) <= kMobilityTaxiRotations) {
                             driveTrain.runArcadeDrive(0, .3);
                         } else {
                             driveTrain.runArcadeDrive(0, 0);
@@ -307,6 +314,9 @@ public class Autonomous {
             default:
             break;
         }
+        driveTrain.update();
+        manipulator.update();
+        intake.update();
     }
 
     // All possible autonomous states

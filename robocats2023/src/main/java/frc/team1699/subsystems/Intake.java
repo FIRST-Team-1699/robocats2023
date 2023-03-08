@@ -55,6 +55,12 @@ public class Intake {
             case IDLE:
                 intakeMotor.set(kIdleSpeed);
             break;
+            case PLACING_AUTO:
+                intakeMotor.set(-.5);
+            break;
+            case INTAKING_AUTO:
+                intakeMotor.set(.15);
+            break;
             default:
             break;
         }
@@ -76,6 +82,8 @@ public class Intake {
     public enum IntakeStates {
         INTAKING,
         PLACING,
-        IDLE
+        IDLE,
+        PLACING_AUTO,
+        INTAKING_AUTO
     }
 }

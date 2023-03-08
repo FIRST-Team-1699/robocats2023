@@ -2,7 +2,7 @@ package frc.team1699.subsystems;
 
 import frc.team1699.subsystems.Pivot.PivotStates;
 import frc.team1699.subsystems.Telescope.TelescopeStates;
-
+//TODO: make it not telescope and pivot or vice versa
 /** The manipulator class combines the pivot, telescope, and intake subsystems to manipulate gamepieces. */
 public class Manipulator {
     private ManipulatorStates wantedState, currentState;
@@ -51,6 +51,10 @@ public class Manipulator {
                 telescope.setWantedState(TelescopeStates.FLOOR);
                 pivot.setWantedState(PivotStates.FLOOR);
             break;
+            case CUBE_SHOOT_HIGH:
+                telescope.setWantedState(TelescopeStates.CUBE_SHOOT_HIGH);
+                pivot.setWantedState(PivotStates.CUBE_SHOOT_HIGH);
+            break;
             default:
             break;
         }                                                                                               
@@ -84,8 +88,11 @@ public class Manipulator {
         return this.currentState;
     }
 
-    public void printTelescopeEncoder() {
+    public void printEncoderPositions() {
+        System.out.println("Telescope");
         telescope.printEncoder();
+        System.out.println("Pivot");
+        pivot.printPivotEncoder();
     }
 
     public boolean isDoneMoving() {
@@ -96,6 +103,15 @@ public class Manipulator {
         }
     }
 
+    public void setBrakeMode() {
+        telescope.setBrakeMode();
+        pivot.setBrakeMode();
+    }
+
+    public void resetTelescopeEncoder() {
+        telescope.resetEncoder();
+    }
+
     public enum ManipulatorStates {
         STORED,
         SHELF,
@@ -103,6 +119,7 @@ public class Manipulator {
         MID,
         LOW,
         STORED_FRONT,
-        FLOOR
+        FLOOR,
+        CUBE_SHOOT_HIGH
     }
 }

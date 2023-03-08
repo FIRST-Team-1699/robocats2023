@@ -18,17 +18,18 @@ public class Pivot {
     private RelativeEncoder pivotEncoder;
     private SparkMaxPIDController pivotSpeedLoop;
 
-    private final double kPivotP = .1;
+    private final double kPivotP = .025;
     private final double kPivotI = 0;
     private final double kPivotD = 0;
 
     private final double kBackStoredPosition = 0;
-    private final double kShelfPosition = 120;
-    private final double kHighCubePosition = 170;
+    private final double kShelfPosition = 182.77;
+    private final double kHighCubePosition = 179;
     private final double kMidCubePosition = 200;
     private final double kLowCubePosition = 220;
-    private final double kFloorPosition = 230;
+    private final double kFloorPosition = 233;
     private final double kFrontStoredPosition = 246;
+    private final double kCubeHighShootPosition = 56.5;
     private double wantedPosition = 0;
 
 
@@ -93,6 +94,9 @@ public class Pivot {
             case STORED_FRONT:
                 wantedPosition = kFrontStoredPosition;
             break;
+            case CUBE_SHOOT_HIGH:
+                wantedPosition = kCubeHighShootPosition;
+            break;
             default:
                 wantedPosition = 0;
             break;
@@ -104,8 +108,8 @@ public class Pivot {
     public void setWantedState(PivotStates wantedState){
         if(wantedState != this.wantedState){
             this.wantedState = wantedState;
-            handleStateTransition();
         }
+        handleStateTransition();
     }
     
     public PivotStates getCurrentState(){
@@ -130,6 +134,14 @@ public class Pivot {
         pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
     }
 
+    public void printPivotEncoder() {
+        System.out.println(pivotEncoder.getPosition());
+    }
+
+    public void setBrakeMode() {
+        pivotMotor.setIdleMode(IdleMode.kBrake);
+    }
+
     public enum PivotStates {
         STORED,
         SHELF,
@@ -137,6 +149,7 @@ public class Pivot {
         MID,
         LOW,
         FLOOR,
-        STORED_FRONT
+        STORED_FRONT,
+        CUBE_SHOOT_HIGH
     }
 }
