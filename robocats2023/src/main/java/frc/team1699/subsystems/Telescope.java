@@ -161,7 +161,7 @@ public class Telescope {
     }
 
     public boolean isDoneMoving() {
-        if (telescopeEncoder.getVelocity() > 0) {
+        if (telescopeEncoder.getVelocity() > 5) {
             return false;
         } else {
             return true;

@@ -117,7 +117,7 @@ public class Pivot {
     }
 
     public boolean isDoneMoving() {
-        if (pivotEncoder.getVelocity() > 0) {
+        if (pivotEncoder.getVelocity() > 5) {
             return false;
         } else {
             return true;

@@ -3,9 +3,12 @@ package frc.team1699.subsystems;
 import frc.team1699.subsystems.Pivot.PivotStates;
 import frc.team1699.subsystems.Telescope.TelescopeStates;
 //TODO: make it not telescope and pivot or vice versa
+
+// IN TO 0, THEN PIVOT, THEN TELESCOPE
 /** The manipulator class combines the pivot, telescope, and intake subsystems to manipulate gamepieces. */
 public class Manipulator {
     private ManipulatorStates wantedState, currentState;
+    private SequentialMovementStates currentMoveState;
 
     private Telescope telescope;
     private Pivot pivot;
@@ -15,49 +18,42 @@ public class Manipulator {
         pivot = new Pivot();
         this.wantedState = ManipulatorStates.STORED;
         this.currentState = ManipulatorStates.STORED;
+        this.currentMoveState = SequentialMovementStates.DONE;
     }
 
     public void update(){
+        switch (wantedState){
+            case STORED:
+                handleSequentialMovement(PivotStates.STORED, TelescopeStates.STORED);
+            break;
+            case SHELF:
+                handleSequentialMovement(PivotStates.SHELF, TelescopeStates.SHELF);
+            break;
+            case HIGH:
+                handleSequentialMovement(PivotStates.HIGH, TelescopeStates.HIGH);
+            break;
+            case MID:
+                handleSequentialMovement(PivotStates.MID, TelescopeStates.MID);
+            break;
+            case LOW:
+                handleSequentialMovement(PivotStates.LOW, TelescopeStates.LOW);
+            break;
+            case STORED_FRONT:
+                handleSequentialMovement(PivotStates.STORED_FRONT, TelescopeStates.STORED_FRONT);
+            case FLOOR:
+                handleSequentialMovement(PivotStates.FLOOR, TelescopeStates.FLOOR);
+            break;
+            case CUBE_SHOOT_HIGH:
+                handleSequentialMovement(PivotStates.CUBE_SHOOT_HIGH, TelescopeStates.CUBE_SHOOT_HIGH);
+            break;
+            default:
+            break;
+        }           
         telescope.update();
         pivot.update();
     }
 
-    public void handleStateTransition(){
-        switch (wantedState){
-            case STORED:
-                telescope.setWantedState(TelescopeStates.STORED);
-                pivot.setWantedState(PivotStates.STORED);
-            break;
-            case SHELF:
-                telescope.setWantedState(TelescopeStates.SHELF);
-                pivot.setWantedState(PivotStates.SHELF);
-            break;
-            case HIGH:
-                telescope.setWantedState(TelescopeStates.HIGH);
-                pivot.setWantedState(PivotStates.HIGH);
-            break;
-            case MID:
-                telescope.setWantedState(TelescopeStates.MID);
-                pivot.setWantedState(PivotStates.MID);
-            break;
-            case LOW:
-                telescope.setWantedState(TelescopeStates.LOW);
-                pivot.setWantedState(PivotStates.LOW);
-            break;
-            case STORED_FRONT:
-                telescope.setWantedState(TelescopeStates.STORED_FRONT);
-                pivot.setWantedState(PivotStates.STORED_FRONT);
-            case FLOOR:
-                telescope.setWantedState(TelescopeStates.FLOOR);
-                pivot.setWantedState(PivotStates.FLOOR);
-            break;
-            case CUBE_SHOOT_HIGH:
-                telescope.setWantedState(TelescopeStates.CUBE_SHOOT_HIGH);
-                pivot.setWantedState(PivotStates.CUBE_SHOOT_HIGH);
-            break;
-            default:
-            break;
-        }                                                                                               
+    public void handleStateTransition(){                                                
         this.currentState = this.wantedState;
     }
 
@@ -65,6 +61,47 @@ public class Manipulator {
         if(this.wantedState != wantedState){
             this.wantedState = wantedState;
             handleStateTransition();
+        }
+    }
+
+    //TODO: TEST
+    public void handleSequentialMovement(PivotStates wantedPivotState, TelescopeStates wantedTelescopeState) {
+        switch(currentMoveState) {
+            case RETRACTING:
+                if(telescope.getCurrentState() != TelescopeStates.STORED) {
+                    telescope.setWantedState(TelescopeStates.STORED);
+                } else {
+                    if(telescope.isDoneMoving()) {
+                        currentMoveState = SequentialMovementStates.PIVOTING;
+                    }
+                }
+            break;
+            case PIVOTING:
+                if(pivot.getCurrentState() != wantedPivotState) {
+                    pivot.setWantedState(wantedPivotState);
+                } else {
+                    if(pivot.isDoneMoving()) {
+                        currentMoveState = SequentialMovementStates.EXTENDING;
+                    }
+                }
+            break;
+            case EXTENDING:
+                if(telescope.getCurrentState() != wantedTelescopeState) {
+                    telescope.setWantedState(wantedTelescopeState);
+                } else {
+                    if(telescope.isDoneMoving()) {
+                        currentMoveState = SequentialMovementStates.DONE;
+                    }
+                }
+            break;
+            case DONE:
+                System.out.println("Done moving arm");
+                if(wantedPivotState != pivot.getCurrentState() || wantedTelescopeState != telescope.getCurrentState()) {
+                    currentMoveState = SequentialMovementStates.RETRACTING;
+                }
+            break;
+            default:
+            break;
         }
     }
 
@@ -121,5 +158,12 @@ public class Manipulator {
         STORED_FRONT,
         FLOOR,
         CUBE_SHOOT_HIGH
+    }
+
+    public enum SequentialMovementStates {
+        RETRACTING,
+        PIVOTING,
+        EXTENDING,
+        DONE
     }
 }

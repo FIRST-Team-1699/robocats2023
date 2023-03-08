@@ -46,10 +46,9 @@ public class Autonomous {
     }
 
     public void prepareForAuto() {
-        System.out.println("Auton chosen");
         this.autonChoice = autonChooser.getSelected();
-        System.out.println(this.autonChoice);
         driveTrain.resetEncoders();
+        currentState = AutonStates.STARTING;
     }
 
     public void update() {
@@ -213,12 +212,9 @@ public class Autonomous {
                 }
             break;
             case choiceFive:
-                System.out.println("doing mobility only auto");
-                System.out.println(driveTrain.getEncoderRotations()[0]);
                 switch (currentState) {
                     case STARTING:
                         currentState = AutonStates.TAXIING;
-                        System.out.println("Starting");
                         driveTrain.resetEncoders();
                     break;
                     case PLACING:
@@ -242,7 +238,6 @@ public class Autonomous {
                         System.out.println("Balancing state reached (something went wrong)");
                     break;
                     case DONE:
-                        System.out.println("Done");
                         driveTrain.runArcadeDrive(0, 0);
                     break;
                     default:
