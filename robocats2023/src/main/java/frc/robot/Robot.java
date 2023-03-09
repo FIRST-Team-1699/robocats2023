@@ -165,11 +165,11 @@ public class Robot extends TimedRobot {
     }
     
     if(opJoystick.getRawButton(6)) {
-      manipulator.incrementPivotPosition();
+      manipulator.incrementTelescopePosition();
     }
 
     if(opJoystick.getRawButton(5)) {
-      manipulator.decrementPivotPosition();
+      manipulator.decrementTelescopePosition();
     }
 
     if(opJoystick.getRawButton(2)) {
