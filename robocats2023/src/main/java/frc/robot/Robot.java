@@ -5,8 +5,18 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Joystick;
+import frc.team1699.subsystems.Autonomous;
+import frc.team1699.subsystems.DriveTrain;
+import frc.team1699.subsystems.Intake;
+import frc.team1699.subsystems.Manipulator;
+import frc.team1699.subsystems.Intake.IntakeStates;
+import frc.team1699.subsystems.Manipulator.ManipulatorStates;
+//import frc.team1699.subsystems.Plow;
+import frc.team1699.subsystems.DriveTrain.DriveStates;
+//import frc.team1699.subsystems.Plow.PlowStates;
+import frc.team1699.Constants;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -15,10 +25,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private Joystick driveJoystick, opJoystick;
+  private Manipulator manipulator;
+  private Intake intake;
+  //private Plow plow;
+  private DriveTrain driveTrain;
+  private Autonomous autonomous;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -26,9 +38,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    driveJoystick = new Joystick(Constants.kDriveJoystickPort);
+    opJoystick = new Joystick(Constants.kOperatorJoystickPort);
+    manipulator = new Manipulator();
+    intake = new Intake();
+    //plow = new Plow();
+    driveTrain = new DriveTrain(driveJoystick);
+    driveTrain.calibrateGyro();
+
+
+    autonomous = new Autonomous(driveTrain, intake, manipulator);
+
+    // CameraServer.startAutomaticCapture();%
   }
 
   /**
@@ -39,7 +60,9 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    // manipulator.printEncoderPositions();
+  }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -53,32 +76,121 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+    autonomous.prepareForAuto();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
+    autonomous.update();
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    driveTrain.setWantedState(DriveStates.MANUAL);
+  }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // DRIVER STICK
+    if(driveJoystick.getRawButton(3)){
+      intake.setWantedState(IntakeStates.INTAKING);
+    }
+
+    if(driveJoystick.getRawButton(4)){
+      intake.setWantedState(IntakeStates.PLACING);
+    }
+
+    if(driveJoystick.getRawButtonReleased(3) || driveJoystick.getRawButtonReleased(4)){
+      intake.setWantedState(IntakeStates.IDLE);
+    }
+
+    // if(driveJoystick.getRawButtonPressed(5)) {
+    //   if(plow.getCurrentState() == PlowStates.OUT) {
+    //     plow.setWantedState(PlowStates.IN);
+    //   } else {
+    //     plow.setWantedState(PlowStates.OUT);
+    //   }
+    // }
+
+    if(driveJoystick.getRawButton(11)) {
+      driveTrain.setWantedState(DriveStates.AUTOBALANCE);
+    } else {
+      driveTrain.setWantedState(DriveStates.MANUAL);
+    } 
+
+    // OPERATOR STICK
+    // FLOOR POSITION
+    if(opJoystick.getRawButtonPressed(3)) {
+      manipulator.setWantedState(ManipulatorStates.FLOOR);
+    }
+
+    if(opJoystick.getPOV() == 0) {
+      manipulator.incrementTelescopePosition();
+    }
+
+    if(opJoystick.getPOV() == 180) {
+      manipulator.decrementTelescopePosition();
+    }
+
+    if(opJoystick.getPOV() == 90) {
+      manipulator.incrementPivotPosition();
+    }
+
+    if(opJoystick.getPOV() == 270) {
+      manipulator.decrementPivotPosition();
+    }
+
+    // LOW
+    if(opJoystick.getRawButtonPressed(11)) {
+      manipulator.setWantedState(ManipulatorStates.LOW);
+    }
+
+    // MID
+    if(opJoystick.getRawButtonPressed(9)) {
+      manipulator.setWantedState(ManipulatorStates.CUBE_MID);
+    }
+
+    // HIGH
+    if(opJoystick.getRawButtonPressed(7)) {
+      manipulator.setWantedState(ManipulatorStates.HIGH);
+    }
+
+    // SHELF
+    if(opJoystick.getRawButtonPressed(12)) {
+      manipulator.setWantedState(ManipulatorStates.SHELF);
+    }
+
+    // STORED BACK
+    if(opJoystick.getRawButtonPressed(10)) {
+      manipulator.setWantedState(ManipulatorStates.STORED);
+    }
+
+    // STORED FRONT
+    if(opJoystick.getRawButtonPressed(8)) {
+      manipulator.setWantedState(ManipulatorStates.STORED_FRONT);
+    }
+    
+    if(opJoystick.getRawButton(6)) {
+      manipulator.incrementPivotPosition();
+    }
+
+    if(opJoystick.getRawButton(5)) {
+      manipulator.decrementPivotPosition();
+    }
+
+    if(opJoystick.getRawButton(2)) {
+      manipulator.resetTelescopeEncoder();
+    }
+
+    manipulator.update();
+    intake.update();
+    // plow.update();
+    driveTrain.update();
+    manipulator.setBrakeMode();
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
