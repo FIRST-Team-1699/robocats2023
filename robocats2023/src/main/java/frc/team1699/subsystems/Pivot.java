@@ -18,18 +18,18 @@ public class Pivot {
     private RelativeEncoder pivotEncoder;
     private SparkMaxPIDController pivotSpeedLoop;
 
-    private final double kPivotP = .025;
+    private final double kPivotP = .02;
     private final double kPivotI = 0;
     private final double kPivotD = 0;
 
     private final double kBackStoredPosition = 0;
     private final double kShelfPosition = 182.77;
-    private final double kHighCubePosition = 179;
-    private final double kMidCubePosition = 200;
-    private final double kLowCubePosition = 220;
+    private final double kHighPosition = 185;
+    private final double kMidPosition = 200;
+    private final double kLowPosition = 220;
     private final double kFloorPosition = 233;
-    private final double kFrontStoredPosition = 246;
-    private final double kCubeHighShootPosition = 56.5;
+    private final double kFrontStoredPosition = 200;
+    private final double kCubeShootMidPosition = 56.5;
     private double wantedPosition = 0;
 
 
@@ -80,13 +80,13 @@ public class Pivot {
                 wantedPosition = kShelfPosition;
             break;
             case HIGH:
-                wantedPosition = kHighCubePosition;
+                wantedPosition = kHighPosition;
             break;
             case MID:
-                wantedPosition = kMidCubePosition;
+                wantedPosition = kMidPosition;
             break;
             case LOW:
-                wantedPosition = kLowCubePosition;
+                wantedPosition = kLowPosition;
             break;
             case FLOOR:
                 wantedPosition = kFloorPosition;
@@ -94,8 +94,8 @@ public class Pivot {
             case STORED_FRONT:
                 wantedPosition = kFrontStoredPosition;
             break;
-            case CUBE_SHOOT_HIGH:
-                wantedPosition = kCubeHighShootPosition;
+            case CUBE_MID:
+                wantedPosition = kCubeShootMidPosition;
             break;
             default:
                 wantedPosition = 0;
@@ -117,7 +117,7 @@ public class Pivot {
     }
 
     public boolean isDoneMoving() {
-        if (pivotEncoder.getVelocity() > 5) {
+        if (Math.abs(pivotEncoder.getVelocity()) > 3) {
             return false;
         } else {
             return true;
@@ -150,6 +150,6 @@ public class Pivot {
         LOW,
         FLOOR,
         STORED_FRONT,
-        CUBE_SHOOT_HIGH
+        CUBE_MID
     }
 }

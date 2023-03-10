@@ -15,7 +15,7 @@ public class Intake {
 
     // Speeds for the motors on the intake
     private final double kIntakeSpeed = .25;
-    private final double kPlacingSpeed = -.25;
+    private final double kPlacingSpeed = -.35;
     private final double kIdleSpeed = .1;
 
 

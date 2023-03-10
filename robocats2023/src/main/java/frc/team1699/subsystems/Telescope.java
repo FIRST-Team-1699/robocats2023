@@ -18,7 +18,7 @@ public class Telescope {
     private SparkMaxPIDController telescopeSpeedLoop;
 
     // creates the PIDController values for the telescoping arm
-    private final double kTelescopeP = .5;
+    private final double kTelescopeP = .75;
     private final double kTelescopeI = 0.000000000;
     private final double kTelescopeD = 0.2;
     private final double kMinOutput = -.5;
@@ -122,7 +122,7 @@ public class Telescope {
                 wantedPercentage = kFloorPercent;
                 wantedPosition = kFloorPercent;
             break;
-            case CUBE_SHOOT_HIGH:
+            case CUBE_MID:
                 wantedPosition = kCubeHighShootPosition;
             break;
             default:
@@ -161,7 +161,7 @@ public class Telescope {
     }
 
     public boolean isDoneMoving() {
-        if (telescopeEncoder.getVelocity() > 5) {
+        if (Math.abs(telescopeEncoder.getVelocity()) > 3) {
             return false;
         } else {
             return true;
@@ -180,6 +180,6 @@ public class Telescope {
         LOW,
         STORED_FRONT,
         FLOOR,
-        CUBE_SHOOT_HIGH
+        CUBE_MID
     }
 }

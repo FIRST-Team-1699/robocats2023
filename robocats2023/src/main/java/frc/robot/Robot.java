@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.team1699.subsystems.Autonomous;
 import frc.team1699.subsystems.DriveTrain;
@@ -44,6 +45,8 @@ public class Robot extends TimedRobot {
     //plow = new Plow();
     driveTrain = new DriveTrain(driveJoystick);
     driveTrain.calibrateGyro();
+
+    CameraServer.startAutomaticCapture();
   }
 
   /**
@@ -118,11 +121,7 @@ public class Robot extends TimedRobot {
 
     // OPERATOR STICK
     // FLOOR POSITION
-    // if(opJoystick.getRawButtonPressed(3)) {
-    //   manipulator.setWantedState(ManipulatorStates.FLOOR);
-    // }
-
-    if(opJoystick.getRawButton(3)) {
+    if(opJoystick.getRawButtonPressed(3)) {
       manipulator.setWantedState(ManipulatorStates.FLOOR);
     }
 
@@ -131,6 +130,14 @@ public class Robot extends TimedRobot {
     }
 
     if(opJoystick.getPOV() == 180) {
+      manipulator.decrementTelescopePosition();
+    }
+
+    if(opJoystick.getPOV() == 90) {
+      manipulator.incrementPivotPosition();
+    }
+
+    if(opJoystick.getPOV() == 270) {
       manipulator.decrementPivotPosition();
     }
 
@@ -141,12 +148,12 @@ public class Robot extends TimedRobot {
 
     // MID
     if(opJoystick.getRawButtonPressed(9)) {
-      manipulator.setWantedState(ManipulatorStates.MID);
+      manipulator.setWantedState(ManipulatorStates.CUBE_MID);
     }
 
     // HIGH
     if(opJoystick.getRawButtonPressed(7)) {
-      manipulator.setWantedState(ManipulatorStates.CUBE_SHOOT_HIGH);
+      manipulator.setWantedState(ManipulatorStates.HIGH);
     }
 
     // SHELF

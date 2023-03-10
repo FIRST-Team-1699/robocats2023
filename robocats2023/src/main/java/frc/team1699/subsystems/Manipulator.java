@@ -13,6 +13,9 @@ public class Manipulator {
     private Telescope telescope;
     private Pivot pivot;
 
+    private final int waitTicks = 10;
+    private int ticksWaited = 0;
+
     public Manipulator(){
         telescope = new Telescope();
         pivot = new Pivot();
@@ -43,8 +46,8 @@ public class Manipulator {
             case FLOOR:
                 handleSequentialMovement(PivotStates.FLOOR, TelescopeStates.FLOOR);
             break;
-            case CUBE_SHOOT_HIGH:
-                handleSequentialMovement(PivotStates.CUBE_SHOOT_HIGH, TelescopeStates.CUBE_SHOOT_HIGH);
+            case CUBE_MID:
+                handleSequentialMovement(PivotStates.CUBE_MID, TelescopeStates.CUBE_MID);
             break;
             default:
             break;
@@ -70,32 +73,43 @@ public class Manipulator {
             case RETRACTING:
                 if(telescope.getCurrentState() != TelescopeStates.STORED) {
                     telescope.setWantedState(TelescopeStates.STORED);
+                    ticksWaited = 0;
                 } else {
-                    if(telescope.isDoneMoving()) {
+                    if(telescope.isDoneMoving() && ticksWaited >= waitTicks) {
                         currentMoveState = SequentialMovementStates.PIVOTING;
+                        ticksWaited = 0;
+                    } else {
+                        ticksWaited++;
                     }
-                }
+                } 
             break;
             case PIVOTING:
                 if(pivot.getCurrentState() != wantedPivotState) {
                     pivot.setWantedState(wantedPivotState);
+                    ticksWaited = 0;
                 } else {
-                    if(pivot.isDoneMoving()) {
+                    if(pivot.isDoneMoving() && ticksWaited >= waitTicks) {
                         currentMoveState = SequentialMovementStates.EXTENDING;
+                        ticksWaited = 0;
+                    } else {
+                        ticksWaited++;
                     }
                 }
             break;
             case EXTENDING:
                 if(telescope.getCurrentState() != wantedTelescopeState) {
                     telescope.setWantedState(wantedTelescopeState);
+                    ticksWaited = 0;
                 } else {
-                    if(telescope.isDoneMoving()) {
+                    if(telescope.isDoneMoving() && ticksWaited >= waitTicks) {
                         currentMoveState = SequentialMovementStates.DONE;
+                        ticksWaited = 0;
+                    } else {
+                        ticksWaited++;
                     }
                 }
             break;
             case DONE:
-                System.out.println("Done moving arm");
                 if(wantedPivotState != pivot.getCurrentState() || wantedTelescopeState != telescope.getCurrentState()) {
                     currentMoveState = SequentialMovementStates.RETRACTING;
                 }
@@ -157,7 +171,7 @@ public class Manipulator {
         LOW,
         STORED_FRONT,
         FLOOR,
-        CUBE_SHOOT_HIGH
+        CUBE_MID
     }
 
     public enum SequentialMovementStates {

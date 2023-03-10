@@ -167,7 +167,7 @@ public class Autonomous {
             case choiceFour:
                 switch (currentState) {
                     case STARTING:
-                        manipulator.setWantedState(ManipulatorStates.CUBE_SHOOT_HIGH);
+                        manipulator.setWantedState(ManipulatorStates.CUBE_MID);
                         intake.setWantedState(IntakeStates.INTAKING_AUTO);
                         if (manipulator.isDoneMoving()) {
                             intake.setWantedState(IntakeStates.PLACING_AUTO);
