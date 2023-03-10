@@ -46,7 +46,10 @@ public class Robot extends TimedRobot {
     driveTrain = new DriveTrain(driveJoystick);
     driveTrain.calibrateGyro();
 
-    CameraServer.startAutomaticCapture();
+
+    autonomous = new Autonomous(driveTrain, intake, manipulator);
+
+    // CameraServer.startAutomaticCapture();%
   }
 
   /**
@@ -58,7 +61,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    manipulator.printEncoderPositions();
+    // manipulator.printEncoderPositions();
   }
 
   /**
@@ -73,7 +76,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    autonomous = new Autonomous(driveTrain, intake, manipulator);
     autonomous.prepareForAuto();
   }
 

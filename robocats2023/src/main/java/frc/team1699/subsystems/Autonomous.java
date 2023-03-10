@@ -48,11 +48,13 @@ public class Autonomous {
     public void prepareForAuto() {
         this.autonChoice = autonChooser.getSelected();
         driveTrain.resetEncoders();
+        driveTrain.setWantedState(DriveStates.MANUAL);
+        manipulator.setWantedState(ManipulatorStates.STORED);
+        intake.setWantedState(IntakeStates.IDLE);
         currentState = AutonStates.STARTING;
     }
 
     public void update() {
-        System.out.println("Updating auton");
         switch (autonChoice) {
             case choiceOne:
                 // do nothing lol
@@ -165,13 +167,16 @@ public class Autonomous {
                 }
             break;
             case choiceFour:
+            // score cube mid mobility
+                System.out.println(intake.getCurrentState());
                 switch (currentState) {
                     case STARTING:
                         manipulator.setWantedState(ManipulatorStates.CUBE_MID);
-                        intake.setWantedState(IntakeStates.INTAKING_AUTO);
+                        intake.setWantedState(IntakeStates.IDLE);
                         if (manipulator.isDoneMoving()) {
-                            intake.setWantedState(IntakeStates.PLACING_AUTO);
+                            intake.setWantedState(IntakeStates.PLACING);
                             currentState = AutonStates.PLACING;
+                            System.out.println("done moving");
                         }
                     break;
                     case PLACING:

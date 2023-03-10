@@ -41,6 +41,7 @@ public class Telescope {
     // TODO: tune this value
     private static final double kMaxRotations = 1000;
 
+    private final double movingTolerance = 5;
     /** creates the telescope object, sets default state to retracted */
     public Telescope() {
         telescopeMotor = new CANSparkMax(Constants.kTelescopeMotorID, MotorType.kBrushless);
@@ -81,7 +82,6 @@ public class Telescope {
             default:
             break;    
         }
-        System.out.println(telescopeEncoder.getPosition());
     }
 
     public void setWantedState(TelescopeStates wantedState) {
@@ -161,10 +161,18 @@ public class Telescope {
     }
 
     public boolean isDoneMoving() {
-        if (Math.abs(telescopeEncoder.getVelocity()) > 3) {
-            return false;
-        } else {
+        // if (Math.abs(telescopeEncoder.getVelocity()) > 3) {
+        //     return false;
+        // } else {
+        //     return true;
+        // }
+        double currentPosition = telescopeEncoder.getPosition();
+        currentPosition -= wantedPosition;
+        currentPosition = Math.abs(currentPosition);
+        if(currentPosition < movingTolerance) {
             return true;
+        } else {
+            return false;
         }
     }
 

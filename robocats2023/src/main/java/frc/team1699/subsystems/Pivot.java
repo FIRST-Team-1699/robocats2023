@@ -32,6 +32,8 @@ public class Pivot {
     private final double kCubeShootMidPosition = 56.5;
     private double wantedPosition = 0;
 
+    private final double movingTolerance = 5;
+
 
     /** Creates the pivot object, sets the default state to default */
     public Pivot(){ 
@@ -117,10 +119,18 @@ public class Pivot {
     }
 
     public boolean isDoneMoving() {
-        if (Math.abs(pivotEncoder.getVelocity()) > 3) {
-            return false;
-        } else {
+        // if (Math.abs(pivotEncoder.getVelocity()) > 3) {
+        //     return false;
+        // } else {
+        //     return true;
+        // }
+        double currentPosition = pivotEncoder.getPosition();
+        currentPosition -= wantedPosition;
+        currentPosition = Math.abs(currentPosition);
+        if(currentPosition < movingTolerance) {
             return true;
+        } else {
+            return false;
         }
     }
     
@@ -134,7 +144,7 @@ public class Pivot {
         pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
     }
 
-    public void printPivotEncoder() {
+    public void printEncoder() {
         System.out.println(pivotEncoder.getPosition());
     }
 

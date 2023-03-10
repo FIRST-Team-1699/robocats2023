@@ -143,11 +143,12 @@ public class Manipulator {
         System.out.println("Telescope");
         telescope.printEncoder();
         System.out.println("Pivot");
-        pivot.printPivotEncoder();
+        pivot.printEncoder();
     }
 
     public boolean isDoneMoving() {
         if(telescope.isDoneMoving() && pivot.isDoneMoving()) {
+            System.out.println("im done moing :3");
             return true;
         } else {
             return false;
