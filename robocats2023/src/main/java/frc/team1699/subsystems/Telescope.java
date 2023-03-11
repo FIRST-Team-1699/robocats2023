@@ -18,11 +18,11 @@ public class Telescope {
     private SparkMaxPIDController telescopeSpeedLoop;
 
     // creates the PIDController values for the telescoping arm
-    private final double kTelescopeP = .75;
-    private final double kTelescopeI = 0.000000000;
-    private final double kTelescopeD = 0.2;
-    private final double kMinOutput = -.5;
-    private final double kMaxOutput = .5;
+    private final double kTelescopeP = 1;
+    private final double kTelescopeI = 0.0;
+    private final double kTelescopeD = 0.0;
+    private final double kMinOutput = -1;
+    private final double kMaxOutput = 1;
     
     // Positional constants
     private final double kStoredPercent = 0;

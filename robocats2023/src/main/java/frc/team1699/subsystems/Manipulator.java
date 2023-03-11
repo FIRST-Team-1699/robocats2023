@@ -148,7 +148,7 @@ public class Manipulator {
 
     public boolean isDoneMoving() {
         if(telescope.isDoneMoving() && pivot.isDoneMoving()) {
-            System.out.println("im done moing :3");
+            System.out.println("im done moving");
             return true;
         } else {
             return false;
@@ -162,6 +162,10 @@ public class Manipulator {
 
     public void resetTelescopeEncoder() {
         telescope.resetEncoder();
+    }
+
+    public void resetPivotEncoder() {
+        pivot.resetEncoder();
     }
 
     public enum ManipulatorStates {

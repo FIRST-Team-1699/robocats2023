@@ -32,4 +32,7 @@ public class Constants {
     // JOYSTICKS
     public static final int kDriveJoystickPort = 0;
     public static final int kOperatorJoystickPort = 1;
+
+    // LEDS
+    public static final int kLEDPort = 0;
 }
