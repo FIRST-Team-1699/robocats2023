@@ -13,6 +13,8 @@ import frc.team1699.subsystems.Intake;
 import frc.team1699.subsystems.Manipulator;
 import frc.team1699.subsystems.Intake.IntakeStates;
 import frc.team1699.subsystems.Manipulator.ManipulatorStates;
+import frc.team1699.utils.leds.LEDController;
+import frc.team1699.utils.leds.colors.*;
 //import frc.team1699.subsystems.Plow;
 import frc.team1699.subsystems.DriveTrain.DriveStates;
 //import frc.team1699.subsystems.Plow.PlowStates;
@@ -25,12 +27,18 @@ import frc.team1699.Constants;
  * project.
  */
 public class Robot extends TimedRobot {
+  // Input
   private Joystick driveJoystick, opJoystick;
+
+  // Subsystems
   private Manipulator manipulator;
   private Intake intake;
   //private Plow plow;
   private DriveTrain driveTrain;
   private Autonomous autonomous;
+
+  // Extra
+  private LEDController ledController;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -38,18 +46,21 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    // Input
     driveJoystick = new Joystick(Constants.kDriveJoystickPort);
     opJoystick = new Joystick(Constants.kOperatorJoystickPort);
+
+    // Subsystems
     manipulator = new Manipulator();
     intake = new Intake();
     //plow = new Plow();
     driveTrain = new DriveTrain(driveJoystick);
     driveTrain.calibrateGyro();
-
-
     autonomous = new Autonomous(driveTrain, intake, manipulator);
 
-    // CameraServer.startAutomaticCapture();%
+    // Extras
+    ledController = new LEDController(88, Constants.kLEDPort);
+    CameraServer.startAutomaticCapture();
   }
 
   /**
@@ -60,9 +71,7 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {
-    // manipulator.printEncoderPositions();
-  }
+  public void robotPeriodic() {}
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -76,13 +85,16 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    driveTrain.enableBrakeMode();
     autonomous.prepareForAuto();
+    ledController.solidColor(new Blue());
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
     autonomous.update();
+    driveTrain.setWantedState(DriveStates.AUTONOMOUS);
   }
 
   /** This function is called once when teleop is enabled. */
@@ -115,11 +127,23 @@ public class Robot extends TimedRobot {
     //   }
     // }
 
-    if(driveJoystick.getRawButton(11)) {
+    if(driveJoystick.getRawButtonPressed(12)) {
       driveTrain.setWantedState(DriveStates.AUTOBALANCE);
-    } else {
+    }
+
+    if(driveJoystick.getRawButtonReleased(12)) {
       driveTrain.setWantedState(DriveStates.MANUAL);
     } 
+
+    if(driveJoystick.getRawButtonPressed(11)) {
+      if(ledController.getColor() instanceof Yellow) {
+        ledController.solidColor(new Purple());
+      } else {
+        ledController.solidColor(new Yellow());
+      }
+    }
+
+
 
     // OPERATOR STICK
     // FLOOR POSITION
@@ -183,6 +207,7 @@ public class Robot extends TimedRobot {
 
     if(opJoystick.getRawButton(2)) {
       manipulator.resetTelescopeEncoder();
+      manipulator.resetPivotEncoder();
     }
 
     manipulator.update();
@@ -194,7 +219,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    ledController.stop();
+  }
 
   /** This function is called periodically when disabled. */
   @Override

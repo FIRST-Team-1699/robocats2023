@@ -18,7 +18,7 @@ public class Pivot {
     private RelativeEncoder pivotEncoder;
     private SparkMaxPIDController pivotSpeedLoop;
 
-    private final double kPivotP = .02;
+    private final double kPivotP = .1;
     private final double kPivotI = 0;
     private final double kPivotD = 0;
 
@@ -29,7 +29,7 @@ public class Pivot {
     private final double kLowPosition = 220;
     private final double kFloorPosition = 233;
     private final double kFrontStoredPosition = 200;
-    private final double kCubeShootMidPosition = 56.5;
+    private final double kCubeShootMidPosition = 42;
     private double wantedPosition = 0;
 
     private final double movingTolerance = 5;
@@ -44,7 +44,7 @@ public class Pivot {
         pivotSpeedLoop.setP(kPivotP);
         pivotSpeedLoop.setI(kPivotI);
         pivotSpeedLoop.setD(kPivotD);
-        pivotSpeedLoop.setOutputRange(-.5, 5);
+        pivotSpeedLoop.setOutputRange(-1, 1);
         this.currentState = PivotStates.STORED;
     }
 
@@ -146,6 +146,10 @@ public class Pivot {
 
     public void printEncoder() {
         System.out.println(pivotEncoder.getPosition());
+    }
+
+    public void resetEncoder() {
+        pivotEncoder.setPosition(0);
     }
 
     public void setBrakeMode() {

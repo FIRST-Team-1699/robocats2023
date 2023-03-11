@@ -5,6 +5,7 @@ import frc.team1699.Constants;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -22,10 +23,10 @@ public class DriveTrain {
     private Joystick joystick;
     private AHRS gyro;
     //balancing constants
-    private final double kBalanceP = .35;
+    private final double kBalanceP = .025;
     private final double kBalanceI = 0.0;
-    private final double kBalanceD = 0.0;
-    private final double kLevelPitch = 0.0;
+    private final double kBalanceD = 0.001;
+    private final double kLevelPitch = 0;
     public static final double kBalanceTolerance = 2.5;
     private PIDController balanceController;
 
@@ -37,6 +38,7 @@ public class DriveTrain {
     private PIDController centerController;
 
     private double centerHeading = 0.0;
+    private final double pitchOffset = 1;
 
     public DriveTrain(Joystick joystick) {
         portLeader = new CANSparkMax(Constants.kPortLeaderID, MotorType.kBrushless);
@@ -67,6 +69,25 @@ public class DriveTrain {
 
         wantedState = DriveStates.MANUAL;
         currentState = DriveStates.MANUAL;
+    }
+
+    public void enableBrakeMode() {
+        portLeader.setIdleMode(IdleMode.kBrake);
+        portFollowerOne.setIdleMode(IdleMode.kBrake);
+        portFollowerTwo.setIdleMode(IdleMode.kBrake);
+
+        starLeader.setIdleMode(IdleMode.kBrake);
+        starFollowerOne.setIdleMode(IdleMode.kBrake);
+        starFollowerTwo.setIdleMode(IdleMode.kBrake);
+    }
+    public void enableCoastMode() {
+        portLeader.setIdleMode(IdleMode.kCoast);
+        portFollowerOne.setIdleMode(IdleMode.kCoast);
+        portFollowerTwo.setIdleMode(IdleMode.kCoast);
+
+        starLeader.setIdleMode(IdleMode.kCoast);
+        starFollowerOne.setIdleMode(IdleMode.kCoast);
+        starFollowerTwo.setIdleMode(IdleMode.kCoast);
     }
 
     /** runArcadeDrive is a magic method used every year. It it what we use to control the robot's movement */
@@ -105,8 +126,14 @@ public class DriveTrain {
             }
         }
         // set motors to port/star output here or else nothing happens lol
-        portLeader.set(portOutput);
-        starLeader.set(starOutput);
+
+        if(getCurrentState() == DriveStates.AUTONOMOUS) {
+            portLeader.set(throttle);
+            starLeader.set(-throttle);
+        } else {
+            portLeader.set(portOutput);
+            starLeader.set(starOutput);
+        }
     }
 
     public void update() {
@@ -115,8 +142,14 @@ public class DriveTrain {
                 runArcadeDrive(joystick.getX(), -joystick.getY());
             break;
             case AUTOBALANCE:
-                runArcadeDrive(centerController.calculate(getYaw()), balanceController.calculate(getPitch()));
+                if(getPitch() < 3 && getPitch() > -3) {
+                    runArcadeDrive(0, 0);
+                } else {
+                    runArcadeDrive(0, balanceController.calculate(getPitch()));
+                }
                 // TODO: TUNE the CONTROLLER AND TOLERANCE AND LEVEL PITCH ETC
+            break;
+            case AUTONOMOUS:
             break;
         }
     }
@@ -135,7 +168,13 @@ public class DriveTrain {
             case AUTOBALANCE:
                 centerHeading = getYaw();
             break;
+            case AUTONOMOUS:
+
+            break;
+            default:
+            break;
         }
+        currentState = wantedState;
     }
 
     public DriveStates getCurrentState() {
@@ -160,7 +199,7 @@ public class DriveTrain {
     }
 
     public double getPitch() {
-        return this.gyro.getPitch();
+        return this.gyro.getPitch() - pitchOffset;
     }
 
     public double getRoll() {
@@ -169,6 +208,6 @@ public class DriveTrain {
 
     public enum DriveStates {
         MANUAL,
-        AUTOBALANCE
+        AUTOBALANCE, AUTONOMOUS
     }
 }
