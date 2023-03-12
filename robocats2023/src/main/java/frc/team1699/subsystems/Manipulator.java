@@ -25,7 +25,14 @@ public class Manipulator {
     }
 
     public void update(){
-        switch (wantedState){
+        // System.out.print("Pivot switch: ");
+        // System.out.println(pivot.getZeroSwitcH());
+        // if(pivot.getZeroSwitcH()) {
+        //     currentState = ManipulatorStates.STORED;
+        //     pivot.setWantedState(PivotStates.STORED);
+        //     telescope.setWantedState(TelescopeStates.STORED);
+        // }
+        switch (currentState){
             case STORED:
                 handleSequentialMovement(PivotStates.STORED, TelescopeStates.STORED);
             break;
@@ -146,12 +153,12 @@ public class Manipulator {
         pivot.printEncoder();
     }
 
-    public void printLimitSwitches() {
-        System.out.println("Telescope");
-        telescope.printSwitch();
-        System.out.println("Pivot");
-        pivot.printLimitSwitch();
-    }
+    // public void printLimitSwitches() {
+    //     System.out.println("Telescope");
+    //     telescope.printSwitch();
+    //     System.out.println("Pivot");
+    //     pivot.printLimitSwitch();
+    // }
 
     public boolean isDoneMoving() {
         if(telescope.isDoneMoving() && pivot.isDoneMoving()) {
@@ -173,6 +180,10 @@ public class Manipulator {
 
     public void resetPivotEncoder() {
         pivot.resetEncoder();
+    }
+
+    public void printWantedPosition() {
+        pivot.printWantedPosition();
     }
 
     public enum ManipulatorStates {

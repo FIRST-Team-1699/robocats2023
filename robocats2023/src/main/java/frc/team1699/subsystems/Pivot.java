@@ -38,7 +38,7 @@ public class Pivot {
     private final double movingTolerance = 5;
 
     // LIMIT SWITCH
-    private DigitalInput zeroSwitch;
+    //private DigitalInput zeroSwitch;
 
 
     /** Creates the pivot object, sets the default state to default */
@@ -50,9 +50,9 @@ public class Pivot {
         pivotSpeedLoop.setP(kPivotP);
         pivotSpeedLoop.setI(kPivotI);
         pivotSpeedLoop.setD(kPivotD);
-        pivotSpeedLoop.setOutputRange(-0.6, 0.6);
+        pivotSpeedLoop.setOutputRange(-1, 1);
 
-        zeroSwitch = new DigitalInput(Constants.kPivotSwitchPort);
+        //zeroSwitch = new DigitalInput(Constants.kPivotSwitchPort);
         
         this.currentState = PivotStates.STORED;
     }
@@ -80,10 +80,10 @@ public class Pivot {
             default:
             break;
         }
-        if(!zeroSwitch.get()) {
-            pivotEncoder.setPosition(0);
-            pivotSpeedLoop.setReference(0, ControlType.kVoltage);
-        }
+        // if(!zeroSwitch.get()) {
+        //     pivotEncoder.setPosition(0);
+        //     pivotSpeedLoop.setReference(0, ControlType.kVoltage);
+        // }
     }
 
     public void handleStateTransition(){
@@ -157,6 +157,10 @@ public class Pivot {
         pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
     }
 
+    public void printWantedPosition() {
+        System.out.println(wantedPosition);
+    }
+
     public void printEncoder() {
         System.out.println(pivotEncoder.getPosition());
     }
@@ -166,7 +170,7 @@ public class Pivot {
     }
 
     public void printLimitSwitch() {
-        System.out.println(zeroSwitch.get());
+        //System.out.println(zeroSwitch.get());
     }
 
     public void setBrakeMode() {

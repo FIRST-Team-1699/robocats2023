@@ -67,7 +67,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    manipulator.printLimitSwitches();
+    //manipulator.printLimitSwitches();
+    manipulator.printEncoderPositions();
+    manipulator.printWantedPosition();
     ledController.rainbow();
   }
 

@@ -19,7 +19,7 @@ public class Telescope {
     private SparkMaxPIDController telescopeSpeedLoop;
 
     // creates the PIDController values for the telescoping arm
-    private final double kTelescopeP = 1;
+    private final double kTelescopeP = .5;
     private final double kTelescopeI = 0.0;
     private final double kTelescopeD = 0.0;
     private final double kMinOutput = -1;
@@ -39,7 +39,7 @@ public class Telescope {
     private double wantedPosition = calculateTelescopeRotations(wantedPercentage);
 
     // Limit switch
-    DigitalInput zeroSwitch;
+    //DigitalInput zeroSwitch;
 
     // maximum amount of rotations of the encoder, used to calculate rotations by percentage
     // TODO: tune this value
@@ -50,6 +50,7 @@ public class Telescope {
     public Telescope() {
         telescopeMotor = new CANSparkMax(Constants.kTelescopeMotorID, MotorType.kBrushless);
         telescopeMotor.setIdleMode(IdleMode.kBrake);
+    //    telescopeMotor.setSmartCurrentLimit(10);
         telescopeEncoder = telescopeMotor.getEncoder();
         telescopeSpeedLoop = telescopeMotor.getPIDController();
         telescopeSpeedLoop.setFeedbackDevice(telescopeEncoder);
@@ -58,7 +59,7 @@ public class Telescope {
         telescopeSpeedLoop.setD(kTelescopeD);
         telescopeSpeedLoop.setOutputRange(kMinOutput, kMaxOutput);
 
-        zeroSwitch = new DigitalInput(Constants.kTelescopeSwitchPort);
+        //zeroSwitch = new DigitalInput(Constants.kTelescopeSwitchPort);
 
         this.currentState = TelescopeStates.STORED;
     }
@@ -89,10 +90,10 @@ public class Telescope {
             default:
             break;    
         }
-        if(!zeroSwitch.get()) {
-            telescopeEncoder.setPosition(0);
-            telescopeSpeedLoop.setReference(0, ControlType.kVoltage);
-        }
+        // if(!zeroSwitch.get()) {
+        //     telescopeEncoder.setPosition(0);
+        //     telescopeSpeedLoop.setReference(0, ControlType.kVoltage);
+        // }
     }
 
     public void setWantedState(TelescopeStates wantedState) {
@@ -191,9 +192,9 @@ public class Telescope {
         telescopeMotor.setIdleMode(IdleMode.kBrake);
     }
 
-    public void printSwitch() {
-        System.out.println(zeroSwitch.get());
-    }
+    // public void printSwitch() {
+    //     System.out.println(zeroSwitch.get());
+    // }
 
     public enum TelescopeStates {
         STORED,
