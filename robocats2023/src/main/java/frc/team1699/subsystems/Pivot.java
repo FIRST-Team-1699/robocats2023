@@ -4,6 +4,9 @@ import frc.team1699.Constants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -18,7 +21,7 @@ public class Pivot {
     private RelativeEncoder pivotEncoder;
     private SparkMaxPIDController pivotSpeedLoop;
 
-    private final double kPivotP = .1;
+    private final double kPivotP = .025;
     private final double kPivotI = 0;
     private final double kPivotD = 0;
 
@@ -34,6 +37,9 @@ public class Pivot {
 
     private final double movingTolerance = 5;
 
+    // LIMIT SWITCH
+    private DigitalInput zeroSwitch;
+
 
     /** Creates the pivot object, sets the default state to default */
     public Pivot(){ 
@@ -45,6 +51,9 @@ public class Pivot {
         pivotSpeedLoop.setI(kPivotI);
         pivotSpeedLoop.setD(kPivotD);
         pivotSpeedLoop.setOutputRange(-1, 1);
+
+        zeroSwitch = new DigitalInput(Constants.kPivotSwitchPort);
+        
         this.currentState = PivotStates.STORED;
     }
 
@@ -70,6 +79,10 @@ public class Pivot {
             break;
             default:
             break;
+        }
+        if(!zeroSwitch.get()) {
+            pivotEncoder.setPosition(0);
+            pivotSpeedLoop.setReference(0, ControlType.kVoltage);
         }
     }
 
@@ -150,6 +163,10 @@ public class Pivot {
 
     public void resetEncoder() {
         pivotEncoder.setPosition(0);
+    }
+
+    public void printLimitSwitch() {
+        System.out.println(zeroSwitch.get());
     }
 
     public void setBrakeMode() {

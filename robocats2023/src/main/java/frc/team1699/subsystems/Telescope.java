@@ -3,6 +3,7 @@ package frc.team1699.subsystems;
 import frc.team1699.Constants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.DigitalInput;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -27,7 +28,7 @@ public class Telescope {
     // Positional constants
     private final double kStoredPercent = 0;
     private final double kShelfPercent = 0;
-    private final double kHighPercent = 367;
+    private final double kHighPercent = 350;
     private final double kMidPercent = 128;
     private final double kLowPercent = 0;
     private final double kStoredFrontPercent = 0;
@@ -36,6 +37,9 @@ public class Telescope {
 
     private double wantedPercentage = 0;
     private double wantedPosition = calculateTelescopeRotations(wantedPercentage);
+
+    // Limit switch
+    DigitalInput zeroSwitch;
 
     // maximum amount of rotations of the encoder, used to calculate rotations by percentage
     // TODO: tune this value
@@ -53,6 +57,9 @@ public class Telescope {
         telescopeSpeedLoop.setI(kTelescopeI);
         telescopeSpeedLoop.setD(kTelescopeD);
         telescopeSpeedLoop.setOutputRange(kMinOutput, kMaxOutput);
+
+        zeroSwitch = new DigitalInput(Constants.kTelescopeSwitchPort);
+
         this.currentState = TelescopeStates.STORED;
     }
 
@@ -81,6 +88,10 @@ public class Telescope {
             break;
             default:
             break;    
+        }
+        if(!zeroSwitch.get()) {
+            telescopeEncoder.setPosition(0);
+            telescopeSpeedLoop.setReference(0, ControlType.kVoltage);
         }
     }
 
@@ -178,6 +189,10 @@ public class Telescope {
 
     public void setBrakeMode() {
         telescopeMotor.setIdleMode(IdleMode.kBrake);
+    }
+
+    public void printSwitch() {
+        System.out.println(zeroSwitch.get());
     }
 
     public enum TelescopeStates {

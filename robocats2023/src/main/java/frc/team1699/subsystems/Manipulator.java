@@ -146,6 +146,13 @@ public class Manipulator {
         pivot.printEncoder();
     }
 
+    public void printLimitSwitches() {
+        System.out.println("Telescope");
+        telescope.printSwitch();
+        System.out.println("Pivot");
+        pivot.printLimitSwitch();
+    }
+
     public boolean isDoneMoving() {
         if(telescope.isDoneMoving() && pivot.isDoneMoving()) {
             System.out.println("im done moving");

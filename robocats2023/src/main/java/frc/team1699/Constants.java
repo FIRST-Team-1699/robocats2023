@@ -34,5 +34,9 @@ public class Constants {
     public static final int kOperatorJoystickPort = 1;
 
     // LEDS
-    public static final int kLEDPort = 0;
+    public static final int kLEDPort = 9;
+
+    // LIMIT SWITCHES
+    public static final int kTelescopeSwitchPort = 8;
+    public static final int kPivotSwitchPort = 7;
 }

@@ -23,6 +23,7 @@ public class Autonomous {
     private static double rotationHeading = 0;
     // TODO: TUNE
     private final double kMobilityTaxiRotations = 55;
+    private final double kToChargeStationRotations = 25;
 
     // robot components
     private DriveTrain driveTrain;
@@ -278,10 +279,18 @@ public class Autonomous {
                 // NOT WORKING MAYBE STRETCH GOAL
                 switch (currentState) {
                     case STARTING:
-                        manipulator.setWantedState(ManipulatorStates.HIGH);
-                        if (manipulator.isDoneMoving()) {
+                        if(manipulator.getCurrentState() != ManipulatorStates.CUBE_MID) {
+                            manipulator.setWantedState(ManipulatorStates.CUBE_MID);
+                            intake.setWantedState(IntakeStates.IDLE);
+                            pivotingTicks = 0;
+                            placingTicks = 0;
+                        } else if (manipulator.isDoneMoving() && pivotingTicks > 25) {
                             intake.setWantedState(IntakeStates.PLACING);
                             currentState = AutonStates.PLACING;
+                            pivotingTicks = 0;
+                            placingTicks = 0;
+                        } else {
+                            pivotingTicks++;
                         }
                     break;
                     case PLACING:
@@ -299,26 +308,23 @@ public class Autonomous {
                             } else {
                                 if (manipulator.isDoneMoving()) {
                                     currentState = AutonStates.TAXIING;
-                                    driveTrain.resetEncoders();
                                 }
                             }
                         }
                     break;
                     case TAXIING:
-                        if (Math.abs(driveTrain.getEncoderRotations()[0]) <= kMobilityTaxiRotations) {
-                            driveTrain.runArcadeDrive(0, .3);
+                        driveTrain.setWantedState(DriveStates.AUTONOMOUS);
+                        if (Math.abs(driveTrain.getEncoderRotations()[0]) <= kToChargeStationRotations) {
+                            driveTrain.runArcadeDrive(0.0, .4);
+                            System.out.println("taxxiing");
+                            System.out.println(driveTrain.getCurrentState());
                         } else {
                             driveTrain.runArcadeDrive(0, 0);
-                            currentState = AutonStates.TURNING;
-                            rotationHeading = driveTrain.getYaw();
+                            currentState = AutonStates.BALANCING;
                         }
                     break;
                     case TURNING:
-                        if (Math.abs(driveTrain.getYaw()) + 2.0 > Math.abs(rotationHeading)) {
-                            driveTrain.runArcadeDrive(.3, 0);
-                        } else {
-                            currentState = AutonStates.COLLECTING;
-                        }
+                        System.out.println("Turning state reached (something went wrong");
                     break;
                     case COLLECTING:
                         if (manipulator.getCurrentState() != ManipulatorStates.FLOOR || intake.getCurrentState() != IntakeStates.INTAKING) {
@@ -328,7 +334,9 @@ public class Autonomous {
                         }
                     break;
                     case BALANCING:
-                        System.out.println("Balancing state reached (something went wrong )");
+                        driveTrain.setWantedState(DriveStates.AUTOBALANCE);
+                        System.out.println(driveTrain.getCurrentState());
+                        System.out.println("balancing!!");
                     break;
                     case DONE:
                         driveTrain.runArcadeDrive(0,0);

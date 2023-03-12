@@ -59,30 +59,18 @@ public class Robot extends TimedRobot {
     autonomous = new Autonomous(driveTrain, intake, manipulator);
 
     // Extras
-    ledController = new LEDController(88, Constants.kLEDPort);
+    ledController = new LEDController(86, Constants.kLEDPort);
+    ledController.start();
+    ledController.rainbow();
     CameraServer.startAutomaticCapture();
   }
 
-  /**
-   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
-   * that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
-   */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    manipulator.printLimitSwitches();
+    ledController.rainbow();
+  }
 
-  /**
-   * This autonomous (along with the chooser code above) shows how to select between different
-   * autonomous modes using the dashboard. The sendable chooser code works with the Java
-   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
-   * uncomment the getString line to get the auto name from the text box below the Gyro
-   *
-   * <p>You can add additional auto modes by adding additional comparisons to the switch structure
-   * below with additional strings. If using the SendableChooser make sure to add them to the
-   * chooser code above as well.
-   */
   @Override
   public void autonomousInit() {
     driveTrain.enableBrakeMode();
@@ -94,7 +82,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     autonomous.update();
-    driveTrain.setWantedState(DriveStates.AUTONOMOUS);
   }
 
   /** This function is called once when teleop is enabled. */
@@ -127,23 +114,29 @@ public class Robot extends TimedRobot {
     //   }
     // }
 
-    if(driveJoystick.getRawButtonPressed(12)) {
+    if(driveJoystick.getRawButtonPressed(11)) {
       driveTrain.setWantedState(DriveStates.AUTOBALANCE);
     }
 
-    if(driveJoystick.getRawButtonReleased(12)) {
+    if(driveJoystick.getRawButtonReleased(11)) {
       driveTrain.setWantedState(DriveStates.MANUAL);
     } 
 
-    if(driveJoystick.getRawButtonPressed(11)) {
-      if(ledController.getColor() instanceof Yellow) {
-        ledController.solidColor(new Purple());
-      } else {
-        ledController.solidColor(new Yellow());
-      }
+    if(driveJoystick.getPOV() == 0) {
+      manipulator.incrementTelescopePosition();
     }
 
+    if(driveJoystick.getPOV() == 180) {
+      manipulator.decrementTelescopePosition();
+    }
 
+    if(driveJoystick.getPOV() == 90) {
+      manipulator.incrementPivotPosition();
+    }
+
+    if(driveJoystick.getPOV() == 270) {
+      manipulator.decrementPivotPosition();
+    }
 
     // OPERATOR STICK
     // FLOOR POSITION
@@ -215,6 +208,7 @@ public class Robot extends TimedRobot {
     // plow.update();
     driveTrain.update();
     manipulator.setBrakeMode();
+    driveTrain.enableBrakeMode();
   }
 
   /** This function is called once when the robot is disabled. */

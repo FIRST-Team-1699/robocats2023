@@ -142,12 +142,17 @@ public class DriveTrain {
                 runArcadeDrive(joystick.getX(), -joystick.getY());
             break;
             case AUTOBALANCE:
-                if(getPitch() < 3 && getPitch() > -3) {
-                    runArcadeDrive(0, 0);
-                } else {
-                    runArcadeDrive(0, balanceController.calculate(getPitch()));
-                }
+                // if(getPitch() < 3 && getPitch() > -3) {
+                //     runArcadeDrive(0, 0);
+                // } else if(getPitch() > 3) {
+                //     portLeader.set(.05);
+                //     starLeader.set(-.05);
+                // } else {
+                //     portLeader.set(-.05);
+                //     starLeader.set(.05);
+                // }
                 // TODO: TUNE the CONTROLLER AND TOLERANCE AND LEVEL PITCH ETC
+                runArcadeDrive(0, -balanceController.calculate(getPitch()));
             break;
             case AUTONOMOUS:
             break;

@@ -41,6 +41,7 @@ public class LEDController {
 
     public void solidColor(HSVColor color) {
         for(int i = 0; i < ledLength; i++) {
+            System.out.println("changing color of " + i);
             ledBuffer.setHSV(i, color.getHue(), color.getSaturation(), color.getValue());
         }
         leds.setData(ledBuffer);
