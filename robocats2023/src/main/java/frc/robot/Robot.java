@@ -58,24 +58,23 @@ public class Robot extends TimedRobot {
     driveTrain.calibrateGyro();
     autonomous = new Autonomous(driveTrain, intake, manipulator);
 
-    // Extras
+    // // Extras
     ledController = new LEDController(86, Constants.kLEDPort);
-    ledController.start();
-    ledController.rainbow();
+    ledController.stop();
+    // ledController.rainbow();
     CameraServer.startAutomaticCapture();
   }
 
   @Override
   public void robotPeriodic() {
-    manipulator.printLimitSwitches();
-    ledController.rainbow();
+    manipulator.printEncoderPositions();
+    // manipulator.printLimitSwitches();
   }
 
   @Override
   public void autonomousInit() {
     driveTrain.enableBrakeMode();
     autonomous.prepareForAuto();
-    ledController.solidColor(new Blue());
   }
 
   /** This function is called periodically during autonomous. */
@@ -214,7 +213,6 @@ public class Robot extends TimedRobot {
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
-    ledController.stop();
   }
 
   /** This function is called periodically when disabled. */

@@ -17,7 +17,7 @@ public class Constants {
     // CAN bus ID's
     // GAME PIECE MANIPULATION
     public static final int kIntakeMotorID = 30;
-    public static final int kTelescopeMotorID = 23;
+    public static final int kTelescopeMotorID = 27;
     public static final int kPivotMotorID = 26;
     // public static final int kPlowMotorID = 33;
     // DRIVETRAIN
@@ -37,6 +37,6 @@ public class Constants {
     public static final int kLEDPort = 9;
 
     // LIMIT SWITCHES
-    public static final int kTelescopeSwitchPort = 8;
+    public static final int kTelescopeSwitchPort = 4;
     public static final int kPivotSwitchPort = 7;
 }
