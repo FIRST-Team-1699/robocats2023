@@ -50,7 +50,7 @@ public class Pivot {
         pivotSpeedLoop.setP(kPivotP);
         pivotSpeedLoop.setI(kPivotI);
         pivotSpeedLoop.setD(kPivotD);
-        pivotSpeedLoop.setOutputRange(-1, 1);
+        pivotSpeedLoop.setOutputRange(-0.6, 0.6);
 
         zeroSwitch = new DigitalInput(Constants.kPivotSwitchPort);
         
