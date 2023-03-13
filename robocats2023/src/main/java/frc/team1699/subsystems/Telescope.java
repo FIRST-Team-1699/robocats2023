@@ -164,11 +164,13 @@ public class Telescope {
     public void incrementTelescopePosition() {
         wantedPosition += 3;
         telescopeSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
+        wantedState = TelescopeStates.MANUAL;
     }
 
     public void decrementTelescopePosition() {
         wantedPosition -= 3;
         telescopeSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
+        wantedState = TelescopeStates.MANUAL;
     }
 
     public boolean isDoneMoving() {
@@ -203,6 +205,7 @@ public class Telescope {
         LOW,
         STORED_FRONT,
         FLOOR,
-        CUBE_MID
+        CUBE_MID,
+        MANUAL
     }
 }
