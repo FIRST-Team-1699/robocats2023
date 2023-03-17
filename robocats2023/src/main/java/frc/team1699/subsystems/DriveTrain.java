@@ -23,9 +23,9 @@ public class DriveTrain {
     private Joystick joystick;
     private AHRS gyro;
     //balancing constants
-    private final double kBalanceP = .025;
+    private final double kBalanceP = .023; // 0.022 WORKS WNE DAY 1 // 0.023 BETTER
     private final double kBalanceI = 0.0;
-    private final double kBalanceD = 0.001;
+    private final double kBalanceD = 0.0015; // 0.0015 WORKS WNE DAY 1
     private final double kLevelPitch = 0;
     public static final double kBalanceTolerance = 2.5;
     private PIDController balanceController;

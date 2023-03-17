@@ -60,15 +60,15 @@ public class Robot extends TimedRobot {
 
     // // Extras
     ledController = new LEDController(86, Constants.kLEDPort);
-    ledController.stop();
-    // ledController.rainbow();
+    //ledController.solidColor(new Teal());
+    ledController.alternateColors(new Blue(), new Yellow());
+    ledController.start();
     CameraServer.startAutomaticCapture();
   }
 
   @Override
   public void robotPeriodic() {
-    manipulator.printEncoderPositions();
-    // manipulator.printLimitSwitches();
+    // System.out.println(autonomous.getCurrentState());
   }
 
   @Override
@@ -185,23 +185,32 @@ public class Robot extends TimedRobot {
     }
 
     // STORED FRONT
-    if(opJoystick.getRawButtonPressed(8)) {
-      manipulator.setWantedState(ManipulatorStates.STORED_FRONT);
-    }
+    // if(opJoystick.getRawButtonPressed(8)) {
+    //   manipulator.setWantedState(ManipulatorStates.STORED_FRONT);
+    // }
     
-    if(opJoystick.getRawButton(6)) {
-      manipulator.incrementPivotPosition();
-    }
+    // if(opJoystick.getRawButton(6)) {
+    //   manipulator.incrementPivotPosition();
+    // }
 
-    if(opJoystick.getRawButton(5)) {
-      manipulator.decrementPivotPosition();
-    }
+    // if(opJoystick.getRawButton(5)) {
+    //   manipulator.decrementPivotPosition();
+    // }
 
     if(opJoystick.getRawButton(2)) {
       manipulator.resetTelescopeEncoder();
       manipulator.resetPivotEncoder();
     }
 
+    if(opJoystick.getRawButtonPressed(5)) {
+      ledController.solidColor(new Purple());
+    }
+    if(opJoystick.getRawButtonPressed(6)) {
+      ledController.solidColor(new Orange());
+    }
+    if(opJoystick.getRawButtonPressed(1)) {
+      ledController.alternateColors(new Yellow(), new Blue());
+    }
     manipulator.update();
     intake.update();
     // plow.update();

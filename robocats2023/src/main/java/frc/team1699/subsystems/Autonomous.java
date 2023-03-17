@@ -1,7 +1,5 @@
 package frc.team1699.subsystems;
 
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team1699.subsystems.DriveTrain.DriveStates;
@@ -62,6 +60,10 @@ public class Autonomous {
         
     }
 
+    public AutonStates getCurrentState() {
+        return this.currentState;
+    }
+
     public void update() {
         switch (autonChoice) {
             case doNothing:
@@ -73,11 +75,12 @@ public class Autonomous {
                 // score and mobility and balance
                 switch (currentState) {
                     case STARTING:
-                        if(manipulator.getCurrentState() != ManipulatorStates.CUBE_MID) {
+                        if(pivotingTicks == 0) {
                             manipulator.setWantedState(ManipulatorStates.CUBE_MID);
                             intake.setWantedState(IntakeStates.IDLE);
-                            pivotingTicks = 0;
+                            pivotingTicks = 1;
                             placingTicks = 0;
+                            System.out.println(getCurrentState());
                         } else if (manipulator.isDoneMoving() && pivotingTicks > 25) {
                             intake.setWantedState(IntakeStates.PLACING);
                             currentState = AutonStates.PLACING;
@@ -307,13 +310,16 @@ public class Autonomous {
                             intake.setWantedState(IntakeStates.IDLE);
                             pivotingTicks = 0;
                             placingTicks = 0;
+                            System.out.println("setting manipulator pos");
                         } else if (manipulator.isDoneMoving() && pivotingTicks > 25) {
                             intake.setWantedState(IntakeStates.PLACING);
                             currentState = AutonStates.PLACING;
                             pivotingTicks = 0;
                             placingTicks = 0;
+                            System.out.println("done!");
                         } else {
                             pivotingTicks++;
+                            System.out.println("manipulator is moving");
                         }
                     break;
                     case PLACING:

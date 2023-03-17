@@ -2,7 +2,7 @@ package frc.team1699.utils.leds.colors;
 
 public class HSVColor {
     private int hue, saturation;
-    private final int value = 50;
+    private final int value = 30;
 
     public HSVColor() {
         hue = 0;

@@ -48,6 +48,17 @@ public class LEDController {
         currentColor = color;
     }
 
+    public void alternateColors(HSVColor colorOne, HSVColor colorTwo) {
+        for(int i = 0; i < ledLength; i++) {
+            if(i%2 == 0) {
+                ledBuffer.setHSV(i, colorOne.getHue(), colorOne.getSaturation(), colorOne.getValue());
+            } else {
+                ledBuffer.setHSV(i, colorTwo.getHue(), colorTwo.getSaturation(), colorTwo.getValue());
+            }
+        }
+        leds.setData(ledBuffer);
+    }
+
     public HSVColor getColor() {
         return currentColor;
     }

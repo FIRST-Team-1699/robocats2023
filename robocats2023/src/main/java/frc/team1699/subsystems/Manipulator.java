@@ -155,7 +155,6 @@ public class Manipulator {
 
     public boolean isDoneMoving() {
         if(telescope.isDoneMoving() && pivot.isDoneMoving()) {
-            System.out.println("im done moving");
             return true;
         } else {
             return false;

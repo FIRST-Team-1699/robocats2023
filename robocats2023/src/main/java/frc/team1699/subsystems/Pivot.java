@@ -27,7 +27,7 @@ public class Pivot {
 
     private final double kBackStoredPosition = 0;
     private final double kShelfPosition = 182.77;
-    private final double kHighPosition = 185;
+    private final double kHighPosition = 180;
     private final double kMidPosition = 200;
     private final double kLowPosition = 220;
     private final double kFloorPosition = 233;
