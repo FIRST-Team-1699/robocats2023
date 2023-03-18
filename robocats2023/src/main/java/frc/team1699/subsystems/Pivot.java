@@ -148,12 +148,12 @@ public class Pivot {
     }
     
     public void incrementWantedPosition() {
-        wantedPosition++;
+        wantedPosition+= 0.7;
         pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
     }
 
     public void decrementWantedPosition() {
-        wantedPosition--;
+        wantedPosition -= 1.0; // 1.0
         pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
     }
 
