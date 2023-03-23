@@ -123,18 +123,22 @@ public class Manipulator {
 
     public void incrementPivotPosition() {
         pivot.incrementWantedPosition();
+        wantedState = ManipulatorStates.MANUAL;
     }
 
     public void decrementPivotPosition() {
         pivot.decrementWantedPosition();
+        wantedState = ManipulatorStates.MANUAL;
     }
 
     public void incrementTelescopePosition() {
         telescope.incrementTelescopePosition();
+        wantedState = ManipulatorStates.MANUAL;
     }
 
     public void decrementTelescopePosition() {
         telescope.decrementTelescopePosition();
+        wantedState = ManipulatorStates.MANUAL;
     }
     
     public ManipulatorStates getCurrentState() {
@@ -185,7 +189,8 @@ public class Manipulator {
         STORED_FRONT,
         FLOOR,
         CUBE_MID,
-        CUBE_HIGH
+        CUBE_HIGH,
+        MANUAL
     }
 
     public enum SequentialMovementStates {

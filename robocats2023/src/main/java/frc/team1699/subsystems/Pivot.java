@@ -154,11 +154,13 @@ public class Pivot {
     public void incrementWantedPosition() {
         wantedPosition += 0.7; // 1.0
         pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
+        wantedState = PivotStates.MANUAL;
     }
 
     public void decrementWantedPosition() {
-        wantedPosition -= 0.7; // 1.0
+        wantedPosition -= 1.0;
         pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
+        wantedState = PivotStates.MANUAL;
     }
 
     public void printEncoder() {
@@ -186,6 +188,7 @@ public class Pivot {
         FLOOR,
         STORED_FRONT,
         CUBE_MID,
-        CUBE_HIGH
+        CUBE_HIGH,
+        MANUAL
     }
 }

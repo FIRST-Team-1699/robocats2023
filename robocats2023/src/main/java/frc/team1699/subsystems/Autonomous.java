@@ -71,12 +71,12 @@ public class Autonomous {
                 // do nothing lol
             break;
             case scoreMobilityBalance:
-                // WORKING
+                // NOT WORKING
                 // score and mobility and balance
                 switch (currentState) {
                     case STARTING:
                         if(pivotingTicks == 0) {
-                            manipulator.setWantedState(ManipulatorStates.CUBE_MID);
+                            manipulator.setWantedState(ManipulatorStates.CUBE_HIGH);
                             intake.setWantedState(IntakeStates.IDLE);
                             pivotingTicks = 1;
                             placingTicks = 0;
@@ -123,8 +123,8 @@ public class Autonomous {
                     break;
                     case DRIVING_BACK:
                         driveTrain.setWantedState(DriveStates.AUTONOMOUS);
-                        if (Math.abs(driveTrain.getEncoderRotations()[0]) <= kBackUpChargeStationRotations+15) {
-                            driveTrain.runArcadeDrive(0.0, -.6);
+                        if (Math.abs(driveTrain.getEncoderRotations()[0]) <= kBackUpChargeStationRotations + 15) {
+                            driveTrain.runArcadeDrive(0.0, -.4);
                             System.out.println("driving back");
                             System.out.println(driveTrain.getCurrentState());
                         } else {
@@ -146,11 +146,12 @@ public class Autonomous {
             break;
             case scoreAndMobility:
                 // WORKING
+                // HIGH UNTESTED
                 // mobility score mid ??
                 switch (currentState) {
                     case STARTING:
-                        if(manipulator.getCurrentState() != ManipulatorStates.CUBE_MID) {
-                            manipulator.setWantedState(ManipulatorStates.CUBE_MID);
+                        if(manipulator.getCurrentState() != ManipulatorStates.CUBE_HIGH) {
+                            manipulator.setWantedState(ManipulatorStates.CUBE_HIGH);
                             intake.setWantedState(IntakeStates.IDLE);
                             pivotingTicks = 0;
                             placingTicks = 0;
@@ -213,8 +214,8 @@ public class Autonomous {
             // score cube mid do nothing
                 switch (currentState) {
                     case STARTING:
-                        if(manipulator.getCurrentState() != ManipulatorStates.CUBE_MID) {
-                            manipulator.setWantedState(ManipulatorStates.CUBE_MID);
+                        if(manipulator.getCurrentState() != ManipulatorStates.CUBE_HIGH) {
+                            manipulator.setWantedState(ManipulatorStates.CUBE_HIGH);
                             intake.setWantedState(IntakeStates.IDLE);
                             pivotingTicks = 0;
                             placingTicks = 0;
@@ -305,8 +306,8 @@ public class Autonomous {
                 // tested once, it works
                 switch (currentState) {
                     case STARTING:
-                        if(manipulator.getCurrentState() != ManipulatorStates.CUBE_MID) {
-                            manipulator.setWantedState(ManipulatorStates.CUBE_MID);
+                        if(manipulator.getCurrentState() != ManipulatorStates.CUBE_HIGH) {
+                            manipulator.setWantedState(ManipulatorStates.CUBE_HIGH);
                             intake.setWantedState(IntakeStates.IDLE);
                             pivotingTicks = 0;
                             placingTicks = 0;

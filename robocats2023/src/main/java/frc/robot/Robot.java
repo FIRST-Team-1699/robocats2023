@@ -39,6 +39,7 @@ public class Robot extends TimedRobot {
 
   // Extra
   private LEDController ledController;
+  private ManipulatorStates lastCheckedState;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -64,6 +65,8 @@ public class Robot extends TimedRobot {
     ledController.alternateColors(new Blue(), new Yellow());
     ledController.start();
     CameraServer.startAutomaticCapture();
+
+    lastCheckedState = manipulator.getCurrentState();
   }
 
   @Override
@@ -197,6 +200,7 @@ public class Robot extends TimedRobot {
     //   manipulator.decrementPivotPosition();
     // }
 
+    // PECK PECK
     if(opJoystick.getRawButtonPressed(5)) {
       for(int i = 0; i < 5; i++) {
         manipulator.incrementPivotPosition();
@@ -204,9 +208,7 @@ public class Robot extends TimedRobot {
     }
 
     if(opJoystick.getRawButtonReleased(5)) {
-      for(int i = 0; i < 5; i++) {
-        manipulator.decrementPivotPosition();
-      }
+      manipulator.setWantedState(lastCheckedState);
     }
 
     if(opJoystick.getRawButton(2)) {
@@ -223,12 +225,16 @@ public class Robot extends TimedRobot {
     if(opJoystick.getRawButtonPressed(1)) {
       ledController.alternateColors(new Yellow(), new Blue());
     }
+    
     manipulator.update();
     intake.update();
     // plow.update();
     driveTrain.update();
     manipulator.setBrakeMode();
     driveTrain.enableBrakeMode();
+    if(manipulator.getCurrentState() != ManipulatorStates.MANUAL) {
+      lastCheckedState = manipulator.getCurrentState();
+    }
   }
 
   /** This function is called once when the robot is disabled. */
