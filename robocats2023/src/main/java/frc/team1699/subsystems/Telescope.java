@@ -32,7 +32,8 @@ public class Telescope {
     private final double kLowPercent = 0;
     private final double kStoredFrontPercent = 0;
     private final double kFloorPercent = 0;
-    private final double kCubeHighShootPosition = 0;
+    private final double kCubeMidShootPosition = 0;
+    private final double kCubeHighShootPosition = 15;
 
     private double wantedPercentage = 0;
     private double wantedPosition = calculateTelescopeRotations(wantedPercentage);
@@ -133,6 +134,9 @@ public class Telescope {
                 wantedPosition = kFloorPercent;
             break;
             case CUBE_MID:
+                wantedPosition = kCubeMidShootPosition;
+            break;
+            case CUBE_HIGH:
                 wantedPosition = kCubeHighShootPosition;
             break;
             default:
@@ -205,6 +209,7 @@ public class Telescope {
         STORED_FRONT,
         FLOOR,
         CUBE_MID,
+        CUBE_HIGH,
         MANUAL
     }
 }

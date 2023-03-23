@@ -33,6 +33,7 @@ public class Pivot {
     private final double kFloorPosition = 233;
     private final double kFrontStoredPosition = 200;
     private final double kCubeShootMidPosition = 46;
+    private final double kCubeShootHighPosition = 64;
     private double wantedPosition = 0;
 
     private final double movingTolerance = 5;
@@ -112,6 +113,9 @@ public class Pivot {
             case CUBE_MID:
                 wantedPosition = kCubeShootMidPosition;
             break;
+            case CUBE_HIGH:
+                wantedPosition = kCubeShootHighPosition;
+            break;
             default:
                 wantedPosition = 0;
             break;
@@ -148,12 +152,12 @@ public class Pivot {
     }
     
     public void incrementWantedPosition() {
-        wantedPosition+= 0.7;
+        wantedPosition += 0.7; // 1.0
         pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
     }
 
     public void decrementWantedPosition() {
-        wantedPosition -= 1.0; // 1.0
+        wantedPosition -= 0.7; // 1.0
         pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
     }
 
@@ -181,6 +185,7 @@ public class Pivot {
         LOW,
         FLOOR,
         STORED_FRONT,
-        CUBE_MID
+        CUBE_MID,
+        CUBE_HIGH
     }
 }

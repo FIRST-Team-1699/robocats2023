@@ -49,6 +49,8 @@ public class Manipulator {
             case CUBE_MID:
                 handleSequentialMovement(PivotStates.CUBE_MID, TelescopeStates.CUBE_MID);
             break;
+            case CUBE_HIGH:
+                handleSequentialMovement(PivotStates.CUBE_HIGH, TelescopeStates.CUBE_HIGH);
             default:
             break;
         }           
@@ -182,7 +184,8 @@ public class Manipulator {
         LOW,
         STORED_FRONT,
         FLOOR,
-        CUBE_MID
+        CUBE_MID,
+        CUBE_HIGH
     }
 
     public enum SequentialMovementStates {

@@ -197,6 +197,18 @@ public class Robot extends TimedRobot {
     //   manipulator.decrementPivotPosition();
     // }
 
+    if(opJoystick.getRawButtonPressed(5)) {
+      for(int i = 0; i < 5; i++) {
+        manipulator.incrementPivotPosition();
+      }
+    }
+
+    if(opJoystick.getRawButtonReleased(5)) {
+      for(int i = 0; i < 5; i++) {
+        manipulator.decrementPivotPosition();
+      }
+    }
+
     if(opJoystick.getRawButton(2)) {
       manipulator.resetTelescopeEncoder();
       manipulator.resetPivotEncoder();
