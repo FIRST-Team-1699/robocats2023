@@ -59,6 +59,15 @@ public class LEDController {
         leds.setData(ledBuffer);
     }
 
+    public void bus(HSVColor color, int busStart, int busLength) {
+        int end = busStart + busLength;
+        for(int i = busStart; i <= end; i++) {
+            int index = i % ledLength;
+            ledBuffer.setHSV(index, color.getHue(), color.getSaturation(), color.getValue());
+        }
+        int i = (((busStart)));
+    }
+
     public HSVColor getColor() {
         return currentColor;
     }
