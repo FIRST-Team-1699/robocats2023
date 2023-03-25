@@ -8,6 +8,8 @@ public class LEDController {
     private int rainbowFirstPixelHue = 50;
     private int rainbowTimesIterated = 0;
 
+    private int flashBangIterations = 0;
+
     private AddressableLED leds;
     private AddressableLEDBuffer ledBuffer;
     private int ledLength;
@@ -68,6 +70,18 @@ public class LEDController {
             }
         }
         leds.setData(ledBuffer);
+    }
+
+    public void flashBang(HSVColor color) {
+        for(int i = 0; i < ledLength; i++) {
+            if(flashBangIterations % 2 == 0) {
+                ledBuffer.setHSV(i, color.getHue(), color.getSaturation(), color.getValue());    
+            } else {
+                ledBuffer.setHSV(i, 0, 0, 0);
+            }
+        }
+        leds.setData(ledBuffer);
+        flashBangIterations++;
     }
 
     // untested

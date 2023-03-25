@@ -25,6 +25,12 @@ public class Pivot {
     private final double kPivotI = 0;
     private final double kPivotD = 0;
 
+    private final double kSmartPivotP = 0.025;
+    private final double kSmartPivotI = 0;
+    private final double kSmartPivotD = 0;
+    private final double kSmartPivotF = 0;
+    private final double kMaxError = 3;
+
     private final double kBackStoredPosition = 0;
     private final double kShelfPosition = 182.77;
     private final double kHighPosition = 180;
@@ -38,23 +44,32 @@ public class Pivot {
 
     private final double movingTolerance = 5;
 
+    private final PIDSlots desiredSlot;
+
     // LIMIT SWITCH
     private DigitalInput zeroSwitch;
 
-
     /** Creates the pivot object, sets the default state to default */
     public Pivot(){ 
-        pivotMotor = new CANSparkMax(Constants.kPivotMotorID, MotorType.kBrushless);
+        zeroSwitch = new DigitalInput(Constants.kPivotSwitchPort);
+
+        pivotMotor = new CANSparkMax(Constants.kTelescopeMotorID, MotorType.kBrushless);
         pivotMotor.setIdleMode(IdleMode.kBrake);
         pivotEncoder = pivotMotor.getEncoder();
         pivotSpeedLoop = pivotMotor.getPIDController();
-        pivotSpeedLoop.setP(kPivotP);
-        pivotSpeedLoop.setI(kPivotI);
-        pivotSpeedLoop.setD(kPivotD);
+        pivotSpeedLoop.setFeedbackDevice(pivotEncoder);
+        pivotSpeedLoop.setP(kPivotP, 0);
+        pivotSpeedLoop.setI(kPivotI, 0);
+        pivotSpeedLoop.setD(kPivotD, 0);
+        
+        pivotSpeedLoop.setP(kSmartPivotP, 1);
+        pivotSpeedLoop.setI(kSmartPivotI, 1);
+        pivotSpeedLoop.setD(kSmartPivotD, 1);
+        pivotSpeedLoop.setFF(kSmartPivotF, 1);
+        pivotSpeedLoop.setSmartMotionAllowedClosedLoopError(kMaxError, 1);
         pivotSpeedLoop.setOutputRange(-1, 1);
 
-        zeroSwitch = new DigitalInput(Constants.kPivotSwitchPort);
-        
+        this.desiredSlot = PIDSlots.SMART_MOTION;
         this.currentState = PivotStates.STORED;
     }
 
@@ -87,8 +102,8 @@ public class Pivot {
         }
     }
 
-    public void handleStateTransition(){
-        switch (wantedState){
+    public void handleStateTransition() {
+        switch (wantedState) {
             case STORED:
                 wantedPosition = kBackStoredPosition;
             break;
@@ -120,7 +135,11 @@ public class Pivot {
                 wantedPosition = 0;
             break;
         }
-        pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
+        if(desiredSlot == PIDSlots.SMART_MOTION) {
+            pivotSpeedLoop.setReference(wantedPosition, CANSparkMax.ControlType.kSmartMotion, 1);
+        } else {
+            pivotSpeedLoop.setReference(wantedPosition, CANSparkMax.ControlType.kPosition, 0);
+        }
         this.currentState = this.wantedState;
     }
 
@@ -190,5 +209,10 @@ public class Pivot {
         CUBE_MID,
         CUBE_HIGH,
         MANUAL
+    }
+
+    public enum PIDSlots {
+        SMART_MOTION,
+        DUMB_MOTION
     }
 }

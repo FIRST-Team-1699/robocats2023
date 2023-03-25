@@ -63,9 +63,7 @@ public class Robot extends TimedRobot {
 
     // // Extras
     ledController = new LEDController(86, Constants.kLEDPort);
-    //ledController.solidColor(new Teal());
-    //ledController.alternateColors(new Blue(), new Yellow());
-    ledController.solidColor(new White());
+    ledController.alternateColors(new Blue(), new Yellow());
     ledController.start();
     CameraServer.startAutomaticCapture();
 
@@ -74,12 +72,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    // System.out.println(autonomous.getCurrentState());
-    // ledController.bus(new Blue(), 43, busOneStart);
-    // ledController.bus(new Yellow(), 43, busTwoStart);
-    // busOneStart++;
-    // busTwoStart++;
-    ledController.rainbow();
+    ledController.bus(new Blue(), 43, busOneStart);
+    ledController.bus(new Yellow(), 43, busTwoStart);
+    busOneStart++;
+    busTwoStart++;
   }
 
   @Override
