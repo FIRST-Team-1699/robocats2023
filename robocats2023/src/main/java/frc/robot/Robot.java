@@ -40,6 +40,8 @@ public class Robot extends TimedRobot {
   // Extra
   private LEDController ledController;
   private ManipulatorStates lastCheckedState;
+  private int busOneStart = 0;
+  private int busTwoStart = 43;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -62,7 +64,8 @@ public class Robot extends TimedRobot {
     // // Extras
     ledController = new LEDController(86, Constants.kLEDPort);
     //ledController.solidColor(new Teal());
-    ledController.alternateColors(new Blue(), new Yellow());
+    //ledController.alternateColors(new Blue(), new Yellow());
+    ledController.solidColor(new White());
     ledController.start();
     CameraServer.startAutomaticCapture();
 
@@ -72,6 +75,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // System.out.println(autonomous.getCurrentState());
+    // ledController.bus(new Blue(), 43, busOneStart);
+    // ledController.bus(new Yellow(), 43, busTwoStart);
+    // busOneStart++;
+    // busTwoStart++;
+    ledController.rainbow();
   }
 
   @Override
@@ -89,14 +97,12 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    ledController.solidColor(new White());
     driveTrain.setWantedState(DriveStates.MANUAL);
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    ledController.bus(new Blue(), 5);
     // DRIVER STICK
     if(driveJoystick.getRawButton(3)){
       intake.setWantedState(IntakeStates.INTAKING);

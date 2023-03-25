@@ -17,12 +17,21 @@ public class Telescope {
     private RelativeEncoder telescopeEncoder;
     private SparkMaxPIDController telescopeSpeedLoop;
 
-    // creates the PIDController values for the telescoping arm
+    // PID gains
     private final double kTelescopeP = .5;
     private final double kTelescopeI = 0.0;
     private final double kTelescopeD = 0.0;
     private final double kMinOutput = -1;
     private final double kMaxOutput = 1;
+    
+    // SmartMotion gains
+    private final double kSmartTelescopeP = .5;
+    private final double kSmartTelescopeI = 0.0;
+    private final double kSmartTelescopeD = 0.0;
+    private final double kSmartMinOutput = -1;
+    private final double kSmartMaxOutput = 1;
+    private final double kTelescopeFF = 0.0;
+    private final double kMaxError = 1;
     
     // Positional constants
     private final double kStoredPercent = 0;
@@ -37,6 +46,8 @@ public class Telescope {
 
     private double wantedPercentage = 0;
     private double wantedPosition = calculateTelescopeRotations(wantedPercentage);
+
+    private PIDSlots desiredSlot;
 
     // Limit switch
     // DigitalInput zeroSwitch;
@@ -53,13 +64,20 @@ public class Telescope {
         telescopeEncoder = telescopeMotor.getEncoder();
         telescopeSpeedLoop = telescopeMotor.getPIDController();
         telescopeSpeedLoop.setFeedbackDevice(telescopeEncoder);
-        telescopeSpeedLoop.setP(kTelescopeP);
-        telescopeSpeedLoop.setI(kTelescopeI);
-        telescopeSpeedLoop.setD(kTelescopeD);
+        telescopeSpeedLoop.setP(kTelescopeP, 0);
+        telescopeSpeedLoop.setI(kTelescopeI, 0);
+        telescopeSpeedLoop.setD(kTelescopeD, 0);
+        
+        telescopeSpeedLoop.setP(kSmartTelescopeP, 1);
+        telescopeSpeedLoop.setI(kSmartTelescopeI, 1);
+        telescopeSpeedLoop.setD(kSmartTelescopeD, 1);
+        telescopeSpeedLoop.setFF(kTelescopeFF, 1);
+        telescopeSpeedLoop.setSmartMotionAllowedClosedLoopError(kMaxError, 1);
         telescopeSpeedLoop.setOutputRange(kMinOutput, kMaxOutput);
 
         // zeroSwitch = new DigitalInput(Constants.kTelescopeSwitchPort);
 
+        this.desiredSlot = PIDSlots.SMART_MOTION;
         this.currentState = TelescopeStates.STORED;
     }
 
@@ -144,7 +162,12 @@ public class Telescope {
         }
         
         // wantedPosition = calculateTelescopeRotations(wantedPercentage);
-        telescopeSpeedLoop.setReference(wantedPosition, CANSparkMax.ControlType.kPosition);
+        if(desiredSlot == PIDSlots.SMART_MOTION) {
+            telescopeSpeedLoop.setReference(wantedPosition, CANSparkMax.ControlType.kSmartMotion, 1);
+        } else {
+            telescopeSpeedLoop.setReference(wantedPosition, CANSparkMax.ControlType.kPosition, 0);
+        }
+        
         this.currentState = this.wantedState;
     }
 
@@ -211,5 +234,10 @@ public class Telescope {
         CUBE_MID,
         CUBE_HIGH,
         MANUAL
+    }
+
+    public enum PIDSlots {
+        SMART_MOTION,
+        DUMB_MOTION
     }
 }

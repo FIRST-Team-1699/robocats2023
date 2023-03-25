@@ -6,7 +6,7 @@ import frc.team1699.utils.leds.colors.*;
 
 public class LEDController {
     private int rainbowFirstPixelHue = 50;
-    private int busStartPixel = 1;
+    private int rainbowTimesIterated = 0;
 
     private AddressableLED leds;
     private AddressableLEDBuffer ledBuffer;
@@ -35,7 +35,10 @@ public class LEDController {
             final int hue = (rainbowFirstPixelHue + (i * 180 / ledLength)) % 180;
             ledBuffer.setHSV(i, hue, 255, 50);
         }
-        rainbowFirstPixelHue += 3;
+        rainbowTimesIterated++;
+        if(rainbowTimesIterated % 1 == 0) {
+            rainbowFirstPixelHue += 1;
+        }
         rainbowFirstPixelHue %= 180;
         leds.setData(ledBuffer);
     }
@@ -61,7 +64,7 @@ public class LEDController {
     }
 
     // untested
-    public void bus(HSVColor color, int busLength) {
+    public void bus(HSVColor color, int busLength, int busStartPixel) {
         int end = busStartPixel + busLength;
         for(int i = busStartPixel; i <= end; i++) {
             int index = i % ledLength;
