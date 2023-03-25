@@ -5,7 +5,10 @@ import frc.team1699.subsystems.Telescope.TelescopeStates;
 //TODO: make it not telescope and pivot or vice versa
 
 // IN TO 0, THEN PIVOT, THEN TELESCOPE
-/** The manipulator class combines the pivot, telescope, and intake subsystems to manipulate gamepieces. */
+/**
+ * The manipulator class combines the pivot, telescope, and intake subsystems to
+ * manipulate gamepieces.
+ */
 public class Manipulator {
     private ManipulatorStates wantedState, currentState;
     private SequentialMovementStates currentMoveState;
@@ -16,7 +19,7 @@ public class Manipulator {
     private final int waitTicks = 10;
     private int ticksWaited = 0;
 
-    public Manipulator(){
+    public Manipulator() {
         telescope = new Telescope();
         pivot = new Pivot();
         this.wantedState = ManipulatorStates.STORED;
@@ -24,8 +27,8 @@ public class Manipulator {
         this.currentMoveState = SequentialMovementStates.DONE;
     }
 
-    public void update(){
-        switch (wantedState){
+    public void update() {
+        switch (wantedState) {
             case STORED:
                 handleSequentialMovement(PivotStates.STORED, TelescopeStates.STORED);
             break;
@@ -53,44 +56,44 @@ public class Manipulator {
                 handleSequentialMovement(PivotStates.CUBE_HIGH, TelescopeStates.CUBE_HIGH);
             default:
             break;
-        }           
+        }
         telescope.update();
         pivot.update();
     }
 
-    public void handleStateTransition(){                                                
+    public void handleStateTransition() {
         this.currentState = this.wantedState;
     }
 
     public void setWantedState(ManipulatorStates wantedState) {
-        if(this.wantedState != wantedState){
+        if (this.wantedState != wantedState) {
             this.wantedState = wantedState;
             handleStateTransition();
         }
     }
 
-    //TODO: TEST
+    // TODO: TEST
     public void handleSequentialMovement(PivotStates wantedPivotState, TelescopeStates wantedTelescopeState) {
-        switch(currentMoveState) {
+        switch (currentMoveState) {
             case RETRACTING:
-                if(telescope.getCurrentState() != TelescopeStates.STORED) {
+                if (telescope.getCurrentState() != TelescopeStates.STORED) {
                     telescope.setWantedState(TelescopeStates.STORED);
                     ticksWaited = 0;
                 } else {
-                    if(telescope.isDoneMoving() && ticksWaited >= waitTicks) {
+                    if (telescope.isDoneMoving() && ticksWaited >= waitTicks) {
                         currentMoveState = SequentialMovementStates.PIVOTING;
                         ticksWaited = 0;
                     } else {
                         ticksWaited++;
                     }
-                } 
+                }
             break;
             case PIVOTING:
-                if(pivot.getCurrentState() != wantedPivotState) {
+                if (pivot.getCurrentState() != wantedPivotState) {
                     pivot.setWantedState(wantedPivotState);
                     ticksWaited = 0;
                 } else {
-                    if(pivot.isDoneMoving() && ticksWaited >= waitTicks) {
+                    if (pivot.isDoneMoving() && ticksWaited >= waitTicks) {
                         currentMoveState = SequentialMovementStates.EXTENDING;
                         ticksWaited = 0;
                     } else {
@@ -99,11 +102,11 @@ public class Manipulator {
                 }
             break;
             case EXTENDING:
-                if(telescope.getCurrentState() != wantedTelescopeState) {
+                if (telescope.getCurrentState() != wantedTelescopeState) {
                     telescope.setWantedState(wantedTelescopeState);
                     ticksWaited = 0;
                 } else {
-                    if(telescope.isDoneMoving() && ticksWaited >= waitTicks) {
+                    if (telescope.isDoneMoving() && ticksWaited >= waitTicks) {
                         currentMoveState = SequentialMovementStates.DONE;
                         ticksWaited = 0;
                     } else {
@@ -112,7 +115,8 @@ public class Manipulator {
                 }
             break;
             case DONE:
-                if(wantedPivotState != pivot.getCurrentState() || wantedTelescopeState != telescope.getCurrentState()) {
+                if (wantedPivotState != pivot.getCurrentState()
+                        || wantedTelescopeState != telescope.getCurrentState()) {
                     currentMoveState = SequentialMovementStates.RETRACTING;
                 }
             break;
@@ -140,7 +144,7 @@ public class Manipulator {
         telescope.decrementTelescopePosition();
         wantedState = ManipulatorStates.MANUAL;
     }
-    
+
     public ManipulatorStates getCurrentState() {
         return this.currentState;
     }
@@ -153,14 +157,14 @@ public class Manipulator {
     }
 
     // public void printLimitSwitches() {
-    //     System.out.println("Telescope");
-    //     telescope.printSwitch();
-    //     System.out.println("Pivot");
-    //     pivot.printLimitSwitch();
+    // System.out.println("Telescope");
+    // telescope.printSwitch();
+    // System.out.println("Pivot");
+    // pivot.printLimitSwitch();
     // }
 
     public boolean isDoneMoving() {
-        if(telescope.isDoneMoving() && pivot.isDoneMoving()) {
+        if (telescope.isDoneMoving() && pivot.isDoneMoving()) {
             return true;
         } else {
             return false;
@@ -181,22 +185,10 @@ public class Manipulator {
     }
 
     public enum ManipulatorStates {
-        STORED,
-        SHELF,
-        HIGH,
-        MID,
-        LOW,
-        STORED_FRONT,
-        FLOOR,
-        CUBE_MID,
-        CUBE_HIGH,
-        MANUAL
+        STORED, SHELF, HIGH, MID, LOW, STORED_FRONT, FLOOR, CUBE_MID, CUBE_HIGH, MANUAL
     }
 
     public enum SequentialMovementStates {
-        RETRACTING,
-        PIVOTING,
-        EXTENDING,
-        DONE
+        RETRACTING, PIVOTING, EXTENDING, DONE
     }
 }

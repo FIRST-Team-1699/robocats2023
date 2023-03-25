@@ -18,7 +18,6 @@ public class Intake {
     private final double kPlacingSpeed = -.35;
     private final double kIdleSpeed = .1;
 
-
     /** Creates the intake object. Sets the default wanted state to idle. */
     public Intake() {
         intakeMotor = new CANSparkMax(Constants.kIntakeMotorID, MotorType.kBrushless);
@@ -26,7 +25,8 @@ public class Intake {
         this.currentState = IntakeStates.IDLE;
     }
 
-    // Runs every 20 ms, handles changes in wantedState and effects of current state.
+    // Runs every 20 ms, handles changes in wantedState and effects of current
+    // state.
     public void update() {
         switch (currentState) {
             case INTAKING:
@@ -44,7 +44,7 @@ public class Intake {
     }
 
     // Runs when the wanted state changes
-    private void handleStateTransition(){
+    private void handleStateTransition() {
         switch (wantedState) {
             case INTAKING:
                 intakeMotor.set(kIntakeSpeed);
@@ -69,21 +69,17 @@ public class Intake {
 
     // Sets the wanted state of the intake and calls handle state transition
     public void setWantedState(IntakeStates wantedState) {
-        if(wantedState != this.wantedState) {
+        if (wantedState != this.wantedState) {
             this.wantedState = wantedState;
             handleStateTransition();
         }
     }
 
-    public IntakeStates getCurrentState(){
+    public IntakeStates getCurrentState() {
         return this.currentState;
     }
 
     public enum IntakeStates {
-        INTAKING,
-        PLACING,
-        IDLE,
-        PLACING_AUTO,
-        INTAKING_AUTO
+        INTAKING, PLACING, IDLE, PLACING_AUTO, INTAKING_AUTO
     }
 }
