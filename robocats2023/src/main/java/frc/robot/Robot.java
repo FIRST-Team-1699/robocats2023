@@ -76,10 +76,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // uncomment for busses
-    ledController.bus(new Blue(), 43, busOneStart);
-    ledController.bus(new Yellow(), 43, busTwoStart);
-    busOneStart++;
-    busTwoStart++;
+
     // ledController.rainbow();
   }
 
@@ -93,11 +90,16 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     autonomous.update();
+    ledController.bus(new Blue(), 43, busOneStart);
+    ledController.bus(new Yellow(), 43, busTwoStart);
+    busOneStart++;
+    busTwoStart++;
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    ledController.alternateColors(new Yellow(), new Blue());
     driveTrain.setWantedState(DriveStates.MANUAL);
   }
 
@@ -173,7 +175,7 @@ public class Robot extends TimedRobot {
 
     // LOW
     if (opJoystick.getRawButtonPressed(11)) {
-      manipulator.setWantedState(ManipulatorStates.LOW);
+      manipulator.setWantedState(ManipulatorStates.CUBE_MID);
     }
 
     // // MID
@@ -231,14 +233,15 @@ public class Robot extends TimedRobot {
       manipulator.resetPivotEncoder();
     }
 
-    if (opJoystick.getRawButtonPressed(5)) {
-      ledController.solidColor(new Purple());
-    }
-    if (opJoystick.getRawButtonPressed(6)) {
-      ledController.solidColor(new Orange());
-    }
     if (opJoystick.getRawButtonPressed(1)) {
-      ledController.alternateColors(new Yellow(), new Blue());
+      colorSwitch++;
+      if(colorSwitch % 3 == 0) {
+        ledController.alternateColors(new Yellow(), new Blue());
+      } else if(colorSwitch % 3 == 1) {
+        ledController.solidColor(new Purple());
+      } else {
+        ledController.solidColor(new Orange());
+      }
     }
 
     manipulator.update();
@@ -248,6 +251,7 @@ public class Robot extends TimedRobot {
     manipulator.setBrakeMode();
     driveTrain.enableBrakeMode();
   }
+  private int colorSwitch = 0;
 
   /** This function is called once when the robot is disabled. */
   @Override
@@ -257,6 +261,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
+    ledController.bus(new Blue(), 43, busOneStart);
+    ledController.bus(new Yellow(), 43, busTwoStart);
+    busOneStart++;
+    busTwoStart++;
   }
 
   /** This function is called once when test mode is enabled. */
@@ -267,6 +275,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
+
   }
 
   /** This function is called once when the robot is first started up. */
