@@ -175,9 +175,13 @@ public class Robot extends TimedRobot {
       manipulator.setWantedState(ManipulatorStates.LOW);
     }
 
-    // MID
-    if (opJoystick.getRawButtonPressed(9)) {
-      manipulator.setWantedState(ManipulatorStates.CUBE_MID);
+    // // MID
+    // if (opJoystick.getRawButtonPressed(9)) {
+    //   manipulator.setWantedState(ManipulatorStates.CUBE_MID);
+    // }
+    // HIGH SHOOT CUBE
+    if (opJoystick.getRawButton(9)) {
+      manipulator.setWantedState(ManipulatorStates.CUBE_HIGH);
     }
 
     // HIGH

@@ -26,6 +26,7 @@ public class Autonomous {
     private final double kPastChargeStationRotations = 60;
     private final double kToChargeStationRotations = 25;
     private final double kBackUpChargeStationRotations = 22;
+    private final int kMaxPivotTicks = 90;
 
     // robot components
     private DriveTrain driveTrain;
@@ -81,7 +82,7 @@ public class Autonomous {
                             pivotingTicks = 1;
                             placingTicks = 0;
                             System.out.println(getCurrentState());
-                        } else if (manipulator.isDoneMoving() && pivotingTicks > 25) {
+                        } else if (manipulator.isDoneMoving() && pivotingTicks > kMaxPivotTicks) {
                             intake.setWantedState(IntakeStates.PLACING);
                             currentState = AutonStates.PLACING;
                             pivotingTicks = 0;
@@ -155,7 +156,7 @@ public class Autonomous {
                             intake.setWantedState(IntakeStates.IDLE);
                             pivotingTicks = 0;
                             placingTicks = 0;
-                        } else if (manipulator.isDoneMoving() && pivotingTicks > 25) {
+                        } else if (manipulator.isDoneMoving() && pivotingTicks > kMaxPivotTicks) {
                             intake.setWantedState(IntakeStates.PLACING);
                             currentState = AutonStates.PLACING;
                             pivotingTicks = 0;
@@ -219,7 +220,7 @@ public class Autonomous {
                             intake.setWantedState(IntakeStates.IDLE);
                             pivotingTicks = 0;
                             placingTicks = 0;
-                        } else if (manipulator.isDoneMoving() && pivotingTicks > 25) {
+                        } else if (manipulator.isDoneMoving() && pivotingTicks > kMaxPivotTicks) {
                             intake.setWantedState(IntakeStates.PLACING);
                             currentState = AutonStates.PLACING;
                             pivotingTicks = 0;
@@ -312,7 +313,7 @@ public class Autonomous {
                             pivotingTicks = 0;
                             placingTicks = 0;
                             System.out.println("setting manipulator pos");
-                        } else if (manipulator.isDoneMoving() && pivotingTicks > 25) {
+                        } else if (manipulator.isDoneMoving() && pivotingTicks > kMaxPivotTicks) {
                             intake.setWantedState(IntakeStates.PLACING);
                             currentState = AutonStates.PLACING;
                             pivotingTicks = 0;

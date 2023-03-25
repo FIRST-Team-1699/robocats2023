@@ -25,11 +25,11 @@ public class Pivot {
     private final double kPivotI = 0;
     private final double kPivotD = 0;
 
-    private final double kSmartPivotP = 0.025;
-    private final double kSmartPivotI = 0;
+    private final double kSmartPivotP = 0.00008;
+    private final double kSmartPivotI = 4e-9;
     private final double kSmartPivotD = 0;
-    private final double kSmartPivotF = 0;
-    private final double kMaxError = 3;
+    private final double kSmartPivotF = 0.0008;
+    private final double kMaxError = 0.07;
 
     private final double kBackStoredPosition = 0;
     private final double kShelfPosition = 182.77;
@@ -39,7 +39,7 @@ public class Pivot {
     private final double kFloorPosition = 233;
     private final double kFrontStoredPosition = 200;
     private final double kCubeShootMidPosition = 46;
-    private final double kCubeShootHighPosition = 64;
+    private final double kCubeShootHighPosition = 52;
     private double wantedPosition = 0;
 
     private final double movingTolerance = 5;
@@ -53,7 +53,7 @@ public class Pivot {
     public Pivot() {
         zeroSwitch = new DigitalInput(Constants.kPivotSwitchPort);
 
-        pivotMotor = new CANSparkMax(Constants.kTelescopeMotorID, MotorType.kBrushless);
+        pivotMotor = new CANSparkMax(Constants.kPivotMotorID, MotorType.kBrushless);
         pivotMotor.setIdleMode(IdleMode.kBrake);
         pivotEncoder = pivotMotor.getEncoder();
         pivotSpeedLoop = pivotMotor.getPIDController();
@@ -67,6 +67,10 @@ public class Pivot {
         pivotSpeedLoop.setD(kSmartPivotD, 1);
         pivotSpeedLoop.setFF(kSmartPivotF, 1);
         pivotSpeedLoop.setSmartMotionAllowedClosedLoopError(kMaxError, 1);
+        pivotSpeedLoop.setSmartMotionMaxVelocity(5000, 1);
+        pivotSpeedLoop.setSmartMotionMaxAccel(3500, 1);
+        pivotSpeedLoop.setSmartMotionMinOutputVelocity(0, 1);
+
         pivotSpeedLoop.setOutputRange(-1, 1);
 
         this.desiredSlot = PIDSlots.SMART_MOTION;

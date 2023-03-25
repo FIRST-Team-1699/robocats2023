@@ -28,13 +28,13 @@ public class Telescope {
     private final double kMaxOutput = 1;
 
     // SmartMotion gains
-    private final double kSmartTelescopeP = .5;
-    private final double kSmartTelescopeI = 0.0;
+    private final double kSmartTelescopeP = .00008;
+    private final double kSmartTelescopeI = 4e-9;
     private final double kSmartTelescopeD = 0.0;
     private final double kSmartMinOutput = -1;
     private final double kSmartMaxOutput = 1;
-    private final double kTelescopeFF = 0.0;
-    private final double kMaxError = 1;
+    private final double kTelescopeFF = 0.0008;
+    private final double kMaxError = 0;
 
     // Positional constants
     private final double kStoredPercent = 0;
@@ -45,7 +45,7 @@ public class Telescope {
     private final double kStoredFrontPercent = 0;
     private final double kFloorPercent = 0;
     private final double kCubeMidShootPosition = 0;
-    private final double kCubeHighShootPosition = 15;
+    private final double kCubeHighShootPosition = 140;
 
     private double wantedPercentage = 0;
     private double wantedPosition = calculateTelescopeRotations(wantedPercentage);
@@ -78,6 +78,9 @@ public class Telescope {
         telescopeSpeedLoop.setD(kSmartTelescopeD, 1);
         telescopeSpeedLoop.setFF(kTelescopeFF, 1);
         telescopeSpeedLoop.setSmartMotionAllowedClosedLoopError(kMaxError, 1);
+        telescopeSpeedLoop.setSmartMotionMaxVelocity(5000, 1);
+        telescopeSpeedLoop.setSmartMotionMaxAccel(1000, 1);
+        telescopeSpeedLoop.setSmartMotionMinOutputVelocity(0, 1);
         telescopeSpeedLoop.setOutputRange(kMinOutput, kMaxOutput);
 
         // zeroSwitch = new DigitalInput(Constants.kTelescopeSwitchPort);
