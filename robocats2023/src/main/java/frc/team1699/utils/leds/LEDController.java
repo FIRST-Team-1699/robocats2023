@@ -36,6 +36,13 @@ public class LEDController {
             ledBuffer.setHSV(i, hue, 255, 50);
         }
         rainbowTimesIterated++;
+        /*
+         * “Redundancy is the single most important
+         * engineering tool for designing, implementing,
+         * and – importantly – proving reliability in all
+         * complex, safety-critical technologies.”
+         * - Mr. John Downer, May 2009
+         */
         if(rainbowTimesIterated % 1 == 0) {
             rainbowFirstPixelHue += 1;
         }
