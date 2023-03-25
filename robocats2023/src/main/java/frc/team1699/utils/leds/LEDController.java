@@ -2,10 +2,11 @@ package frc.team1699.utils.leds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import frc.team1699.utils.leds.colors.HSVColor;
+import frc.team1699.utils.leds.colors.*;
 
 public class LEDController {
     private int rainbowFirstPixelHue = 50;
+    private int busStartPixel = 1;
 
     private AddressableLED leds;
     private AddressableLEDBuffer ledBuffer;
@@ -59,13 +60,19 @@ public class LEDController {
         leds.setData(ledBuffer);
     }
 
-    public void bus(HSVColor color, int busStart, int busLength) {
-        int end = busStart + busLength;
-        for(int i = busStart; i <= end; i++) {
+    // untested
+    public void bus(HSVColor color, int busLength) {
+        int end = busStartPixel + busLength;
+        for(int i = busStartPixel; i <= end; i++) {
             int index = i % ledLength;
             ledBuffer.setHSV(index, color.getHue(), color.getSaturation(), color.getValue());
         }
-        int i = (((busStart)));
+        int i = (((busStartPixel - 1) % ledLength) + ledLength) % ledLength;
+        HSVColor white = new White();
+        ledBuffer.setHSV(i, white.getHue(), white.getSaturation(), white.getValue());
+        leds.setData(ledBuffer);
+        currentColor = color;
+        busStartPixel++;
     }
 
     public HSVColor getColor() {
