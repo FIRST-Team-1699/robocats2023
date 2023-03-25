@@ -90,10 +90,14 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     autonomous.update();
-    ledController.bus(new Blue(), 43, busOneStart);
-    ledController.bus(new Yellow(), 43, busTwoStart);
-    busOneStart++;
-    busTwoStart++;
+    if(Autonomous.autoIsDone) {
+      ledController.rainbow();
+    } else {
+      ledController.bus(new Blue(), 43, busOneStart);
+      ledController.bus(new Yellow(), 43, busTwoStart);
+      busOneStart++;
+      busTwoStart++;
+    }
   }
 
   /** This function is called once when teleop is enabled. */

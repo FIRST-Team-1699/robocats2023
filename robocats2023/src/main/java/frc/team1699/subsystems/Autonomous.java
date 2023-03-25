@@ -17,6 +17,8 @@ public class Autonomous {
     private final String balanceOnly = "Balance Only";
     private String autonChoice;
 
+    public static boolean autoIsDone = false;
+
     private AutonStates currentState;
 
     private static int placingTicks = 0;
@@ -58,6 +60,7 @@ public class Autonomous {
         manipulator.setWantedState(ManipulatorStates.STORED);
         intake.setWantedState(IntakeStates.IDLE);
         currentState = AutonStates.STARTING;
+        autoIsDone = false;
 
     }
 
@@ -131,6 +134,7 @@ public class Autonomous {
                         } else {
                             driveTrain.runArcadeDrive(0, 0);
                             currentState = AutonStates.DRIVING_BACK;
+                            autoIsDone = true;
                         }
                     break;
                     case COLLECTING:
@@ -193,6 +197,7 @@ public class Autonomous {
                         } else {
                             driveTrain.runArcadeDrive(0, 0);
                             currentState = AutonStates.DONE;
+                            autoIsDone = true;
                         }
                     break;
                     case DRIVING_BACK:
@@ -236,6 +241,7 @@ public class Autonomous {
                             }
                             placingTicks++;
                         } else {
+                            autoIsDone = true;
                             if (intake.getCurrentState() == IntakeStates.PLACING) {
                                 intake.setWantedState(IntakeStates.IDLE);
                             }
@@ -285,6 +291,7 @@ public class Autonomous {
                         } else {
                             driveTrain.runArcadeDrive(0, 0);
                             currentState = AutonStates.DONE;
+                            autoIsDone = true;
                         }
                     break;
                     case DRIVING_BACK:
@@ -361,6 +368,7 @@ public class Autonomous {
                     break;
                     case BALANCING:
                         driveTrain.setWantedState(DriveStates.AUTOBALANCE);
+                        autoIsDone = true;
                     break;
                     case DONE:
                         driveTrain.runArcadeDrive(0, 0);
@@ -395,6 +403,7 @@ public class Autonomous {
                     break;
                     case BALANCING:
                         driveTrain.setWantedState(DriveStates.AUTOBALANCE);
+                        autoIsDone = true;
                     break;
                     case DONE:
                         driveTrain.runArcadeDrive(0, 0);
