@@ -21,9 +21,12 @@ import frc.team1699.subsystems.DriveTrain.DriveStates;
 import frc.team1699.Constants;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
@@ -33,7 +36,7 @@ public class Robot extends TimedRobot {
   // Subsystems
   private Manipulator manipulator;
   private Intake intake;
-  //private Plow plow;
+  // private Plow plow;
   private DriveTrain driveTrain;
   private Autonomous autonomous;
 
@@ -44,7 +47,8 @@ public class Robot extends TimedRobot {
   private int busTwoStart = 43;
 
   /**
-   * This function is run when the robot is first started up and should be used for any
+   * This function is run when the robot is first started up and should be used
+   * for any
    * initialization code.
    */
   @Override
@@ -56,7 +60,7 @@ public class Robot extends TimedRobot {
     // Subsystems
     manipulator = new Manipulator();
     intake = new Intake();
-    //plow = new Plow();
+    // plow = new Plow();
     driveTrain = new DriveTrain(driveJoystick);
     driveTrain.calibrateGyro();
     autonomous = new Autonomous(driveTrain, intake, manipulator);
@@ -100,143 +104,143 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // DRIVER STICK
-    if(driveJoystick.getRawButton(3)){
+    if (driveJoystick.getRawButton(3)) {
       intake.setWantedState(IntakeStates.INTAKING);
     }
 
-    if(driveJoystick.getRawButton(4)){
+    if (driveJoystick.getRawButton(4)) {
       intake.setWantedState(IntakeStates.PLACING);
     }
 
-    if(driveJoystick.getRawButtonReleased(3) || driveJoystick.getRawButtonReleased(4)){
+    if (driveJoystick.getRawButtonReleased(3) || driveJoystick.getRawButtonReleased(4)) {
       intake.setWantedState(IntakeStates.IDLE);
     }
 
     // if(driveJoystick.getRawButtonPressed(5)) {
-    //   if(plow.getCurrentState() == PlowStates.OUT) {
-    //     plow.setWantedState(PlowStates.IN);
-    //   } else {
-    //     plow.setWantedState(PlowStates.OUT);
-    //   }
+    // if(plow.getCurrentState() == PlowStates.OUT) {
+    // plow.setWantedState(PlowStates.IN);
+    // } else {
+    // plow.setWantedState(PlowStates.OUT);
+    // }
     // }
 
-    if(driveJoystick.getRawButtonPressed(11)) {
+    if (driveJoystick.getRawButtonPressed(11)) {
       driveTrain.setWantedState(DriveStates.AUTOBALANCE);
     }
 
-    if(driveJoystick.getRawButtonReleased(11)) {
+    if (driveJoystick.getRawButtonReleased(11)) {
       driveTrain.setWantedState(DriveStates.MANUAL);
-    } 
+    }
 
-    if(driveJoystick.getPOV() == 0) {
+    if (driveJoystick.getPOV() == 0) {
       manipulator.incrementTelescopePosition();
     }
 
-    if(driveJoystick.getPOV() == 180) {
+    if (driveJoystick.getPOV() == 180) {
       manipulator.decrementTelescopePosition();
     }
 
-    if(driveJoystick.getPOV() == 90) {
+    if (driveJoystick.getPOV() == 90) {
       manipulator.incrementPivotPosition();
     }
 
-    if(driveJoystick.getPOV() == 270) {
+    if (driveJoystick.getPOV() == 270) {
       manipulator.decrementPivotPosition();
     }
 
     // OPERATOR STICK
     // FLOOR POSITION
-    if(opJoystick.getRawButtonPressed(3)) {
+    if (opJoystick.getRawButtonPressed(3)) {
       manipulator.setWantedState(ManipulatorStates.FLOOR);
     }
 
-    if(opJoystick.getPOV() == 0) {
+    if (opJoystick.getPOV() == 0) {
       manipulator.incrementTelescopePosition();
     }
 
-    if(opJoystick.getPOV() == 180) {
+    if (opJoystick.getPOV() == 180) {
       manipulator.decrementTelescopePosition();
     }
 
-    if(opJoystick.getPOV() == 90) {
+    if (opJoystick.getPOV() == 90) {
       manipulator.incrementPivotPosition();
     }
 
-    if(opJoystick.getPOV() == 270) {
+    if (opJoystick.getPOV() == 270) {
       manipulator.decrementPivotPosition();
     }
 
     // LOW
-    if(opJoystick.getRawButtonPressed(11)) {
+    if (opJoystick.getRawButtonPressed(11)) {
       manipulator.setWantedState(ManipulatorStates.LOW);
     }
 
     // MID
-    if(opJoystick.getRawButtonPressed(9)) {
+    if (opJoystick.getRawButtonPressed(9)) {
       manipulator.setWantedState(ManipulatorStates.CUBE_MID);
     }
 
     // HIGH
-    if(opJoystick.getRawButtonPressed(7)) {
+    if (opJoystick.getRawButtonPressed(7)) {
       manipulator.setWantedState(ManipulatorStates.HIGH);
     }
 
     // SHELF
-    if(opJoystick.getRawButtonPressed(12)) {
+    if (opJoystick.getRawButtonPressed(12)) {
       manipulator.setWantedState(ManipulatorStates.SHELF);
     }
 
     // STORED BACK
-    if(opJoystick.getRawButtonPressed(10)) {
+    if (opJoystick.getRawButtonPressed(10)) {
       manipulator.setWantedState(ManipulatorStates.STORED);
     }
 
     // STORED FRONT
     // if(opJoystick.getRawButtonPressed(8)) {
-    //   manipulator.setWantedState(ManipulatorStates.STORED_FRONT);
+    // manipulator.setWantedState(ManipulatorStates.STORED_FRONT);
     // }
-    
+
     // if(opJoystick.getRawButton(6)) {
-    //   manipulator.incrementPivotPosition();
+    // manipulator.incrementPivotPosition();
     // }
 
     // if(opJoystick.getRawButton(5)) {
-    //   manipulator.decrementPivotPosition();
+    // manipulator.decrementPivotPosition();
     // }
 
     // PECK PECK
-    if(opJoystick.getRawButtonPressed(5)) {
-      for(int i = 0; i < 5; i++) {
+    if (opJoystick.getRawButtonPressed(5)) {
+      for (int i = 0; i < 5; i++) {
         manipulator.incrementPivotPosition();
       }
     }
 
-    if(opJoystick.getRawButtonReleased(5)) {
+    if (opJoystick.getRawButtonReleased(5)) {
       manipulator.setWantedState(lastCheckedState);
     }
 
-    if(opJoystick.getRawButton(2)) {
+    if (opJoystick.getRawButton(2)) {
       manipulator.resetTelescopeEncoder();
       manipulator.resetPivotEncoder();
     }
 
-    if(opJoystick.getRawButtonPressed(5)) {
+    if (opJoystick.getRawButtonPressed(5)) {
       ledController.solidColor(new Purple());
     }
-    if(opJoystick.getRawButtonPressed(6)) {
+    if (opJoystick.getRawButtonPressed(6)) {
       ledController.solidColor(new Orange());
     }
-    if(opJoystick.getRawButtonPressed(1)) {
+    if (opJoystick.getRawButtonPressed(1)) {
       ledController.alternateColors(new Yellow(), new Blue());
     }
-    
+
     manipulator.update();
     intake.update();
     // plow.update();
     driveTrain.update();
     manipulator.setBrakeMode();
     driveTrain.enableBrakeMode();
-    if(manipulator.getCurrentState() != ManipulatorStates.MANUAL) {
+    if (manipulator.getCurrentState() != ManipulatorStates.MANUAL) {
       lastCheckedState = manipulator.getCurrentState();
     }
   }
@@ -248,21 +252,26 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override
-  public void testInit() {}
+  public void testInit() {
+  }
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 }
