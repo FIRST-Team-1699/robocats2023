@@ -31,8 +31,6 @@ public class Telescope {
     private final double kSmartTelescopeP = .00008;
     private final double kSmartTelescopeI = 4e-9;
     private final double kSmartTelescopeD = 0.0;
-    private final double kSmartMinOutput = -1;
-    private final double kSmartMaxOutput = 1;
     private final double kTelescopeFF = 0.0008;
     private final double kMaxError = 0;
 
@@ -78,8 +76,8 @@ public class Telescope {
         telescopeSpeedLoop.setD(kSmartTelescopeD, 1);
         telescopeSpeedLoop.setFF(kTelescopeFF, 1);
         telescopeSpeedLoop.setSmartMotionAllowedClosedLoopError(kMaxError, 1);
-        telescopeSpeedLoop.setSmartMotionMaxVelocity(5000, 1);
-        telescopeSpeedLoop.setSmartMotionMaxAccel(1000, 1);
+        telescopeSpeedLoop.setSmartMotionMaxVelocity(9000, 1);
+        telescopeSpeedLoop.setSmartMotionMaxAccel(4000, 1);
         telescopeSpeedLoop.setSmartMotionMinOutputVelocity(0, 1);
         telescopeSpeedLoop.setOutputRange(kMinOutput, kMaxOutput);
 

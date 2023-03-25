@@ -42,9 +42,10 @@ public class Robot extends TimedRobot {
 
   // Extra
   private LEDController ledController;
-  private ManipulatorStates lastCheckedState;
   private int busOneStart = 0;
   private int busTwoStart = 43;
+
+  private final int kCoefficientOfPeck = 19;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -70,16 +71,16 @@ public class Robot extends TimedRobot {
     ledController.alternateColors(new Blue(), new Yellow());
     ledController.start();
     CameraServer.startAutomaticCapture();
-
-    lastCheckedState = manipulator.getCurrentState();
   }
 
   @Override
   public void robotPeriodic() {
+    // uncomment for busses
     ledController.bus(new Blue(), 43, busOneStart);
     ledController.bus(new Yellow(), 43, busTwoStart);
     busOneStart++;
     busTwoStart++;
+    // ledController.rainbow();
   }
 
   @Override
@@ -177,7 +178,7 @@ public class Robot extends TimedRobot {
 
     // // MID
     // if (opJoystick.getRawButtonPressed(9)) {
-    //   manipulator.setWantedState(ManipulatorStates.CUBE_MID);
+    // manipulator.setWantedState(ManipulatorStates.CUBE_MID);
     // }
     // HIGH SHOOT CUBE
     if (opJoystick.getRawButton(9)) {
@@ -214,13 +215,15 @@ public class Robot extends TimedRobot {
 
     // PECK PECK
     if (opJoystick.getRawButtonPressed(5)) {
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < kCoefficientOfPeck; i++) {
         manipulator.incrementPivotPosition();
       }
     }
 
     if (opJoystick.getRawButtonReleased(5)) {
-      manipulator.setWantedState(lastCheckedState);
+      for (int i = 0; i < kCoefficientOfPeck; i++) {
+        manipulator.decrementPivotPosition();
+      }
     }
 
     if (opJoystick.getRawButton(2)) {
@@ -244,9 +247,6 @@ public class Robot extends TimedRobot {
     driveTrain.update();
     manipulator.setBrakeMode();
     driveTrain.enableBrakeMode();
-    if (manipulator.getCurrentState() != ManipulatorStates.MANUAL) {
-      lastCheckedState = manipulator.getCurrentState();
-    }
   }
 
   /** This function is called once when the robot is disabled. */

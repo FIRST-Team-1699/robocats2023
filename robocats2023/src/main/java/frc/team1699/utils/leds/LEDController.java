@@ -83,16 +83,17 @@ public class LEDController {
         flashBangIterations++;
     }
 
-    // untested
+    // 
     public void bus(HSVColor color, int busLength, int busStartPixel) {
         int end = busStartPixel + busLength;
         for (int i = busStartPixel; i <= end; i++) {
             int index = i % ledLength;
             ledBuffer.setHSV(index, color.getHue(), color.getSaturation(), color.getValue());
         }
-        int i = (((busStartPixel - 1) % ledLength) + ledLength) % ledLength;
-        HSVColor white = new White();
-        ledBuffer.setHSV(i, white.getHue(), white.getSaturation(), white.getValue());
+        // int i = (((busStartPixel - 1) % ledLength) + ledLength) % ledLength;
+        // HSVColor white = new White();
+        //uncomment for only 1 bus
+        //ledBuffer.setHSV(i, white.getHue(), white.getSaturation(), white.getValue());
         leds.setData(ledBuffer);
         currentColor = color;
         busStartPixel++;

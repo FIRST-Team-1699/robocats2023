@@ -32,8 +32,8 @@ public class Pivot {
     private final double kMaxError = 0.07;
 
     private final double kBackStoredPosition = 0;
-    private final double kShelfPosition = 182.77;
-    private final double kHighPosition = 180;
+    private final double kShelfPosition = 170;
+    private final double kHighPosition = 170;
     private final double kMidPosition = 200;
     private final double kLowPosition = 220;
     private final double kFloorPosition = 233;
@@ -181,7 +181,7 @@ public class Pivot {
     }
 
     public void decrementWantedPosition() {
-        wantedPosition -= 1.0;
+        wantedPosition -= 0.7;
         pivotSpeedLoop.setReference(wantedPosition, ControlType.kPosition);
         wantedState = PivotStates.MANUAL;
     }
