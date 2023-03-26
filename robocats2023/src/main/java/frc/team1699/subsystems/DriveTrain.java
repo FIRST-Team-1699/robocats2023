@@ -105,6 +105,14 @@ public class DriveTrain {
             throttle = -throttle;
         }
 
+        if(throttle > .95) {
+            throttle = .95;
+        }
+
+        if(throttle < -.95) {
+            throttle = -.95;
+        }
+
         // deadband, makes it easier/possible to drive straight since it doesn't take
         // tiny inputs
         // TODO: tune deadband?

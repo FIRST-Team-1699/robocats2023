@@ -27,7 +27,7 @@ public class Autonomous {
     private final double kMobilityTaxiRotations = 55;
     private final double kPastChargeStationRotations = 55;
     private final double kToChargeStationRotations = 25;
-    private final double kBackUpChargeStationRotations = 10;
+    private final double kBackUpChargeStationRotations = 12;
     private final int kMaxPivotTicks = 90;
 
     // robot components
@@ -69,13 +69,14 @@ public class Autonomous {
     }
 
     public void update() {
+        System.out.println(autonChoice);
         switch (autonChoice) {
             case doNothing:
             // WORKING
             // do nothing lol
             break;
             case scoreMobilityBalance:
-                // NOT WORKING
+                // 
                 // score and mobility and balance
                 switch (currentState) {
                     case STARTING:
