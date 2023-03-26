@@ -5,7 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.team1699.subsystems.Autonomous;
 import frc.team1699.subsystems.DriveTrain;
@@ -90,7 +92,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     autonomous.update();
-    if(Autonomous.autoIsDone) {
+    if (Autonomous.autoIsDone) {
       ledController.rainbow();
     } else {
       ledController.bus(new Blue(), 43, busOneStart);
@@ -206,10 +208,10 @@ public class Robot extends TimedRobot {
       manipulator.setWantedState(ManipulatorStates.STORED);
     }
 
-    // STORED FRONT
-    // if(opJoystick.getRawButtonPressed(8)) {
-    // manipulator.setWantedState(ManipulatorStates.STORED_FRONT);
-    // }
+    // CONE MID
+    if (opJoystick.getRawButtonPressed(8)) {
+      manipulator.setWantedState(ManipulatorStates.MID);
+    }
 
     // if(opJoystick.getRawButton(6)) {
     // manipulator.incrementPivotPosition();
@@ -226,10 +228,15 @@ public class Robot extends TimedRobot {
       }
     }
 
+    if (opJoystick.getRawButton(5) && (manipulator.getCurrentState() == ManipulatorStates.SHELF || manipulator.getCurrentState() == ManipulatorStates.STORED)) {
+      intake.setWantedState(IntakeStates.INTAKING);
+    }
+
     if (opJoystick.getRawButtonReleased(5)) {
       for (int i = 0; i < kCoefficientOfPeck; i++) {
         manipulator.decrementPivotPosition();
       }
+      intake.setWantedState(IntakeStates.IDLE);
     }
 
     if (opJoystick.getRawButton(2)) {
@@ -237,14 +244,18 @@ public class Robot extends TimedRobot {
       manipulator.resetPivotEncoder();
     }
 
+    if (driveJoystick.getRawButtonPressed(5)) {
+      driveTrain.reverse();
+    }
+
     if (opJoystick.getRawButtonPressed(1)) {
       colorSwitch++;
-      if(colorSwitch % 3 == 0) {
+      if (colorSwitch % 3 == 0) {
         ledController.alternateColors(new Yellow(), new Blue());
-      } else if(colorSwitch % 3 == 1) {
+      } else if (colorSwitch % 3 == 1) {
         ledController.solidColor(new Purple());
       } else {
-        ledController.solidColor(new Orange());
+        ledController.solidColor(new Yellow());
       }
     }
 
@@ -255,21 +266,23 @@ public class Robot extends TimedRobot {
     manipulator.setBrakeMode();
     driveTrain.enableBrakeMode();
   }
+
   private int colorSwitch = 0;
 
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
+    if(DriverStation.getAlliance() == Alliance.Red) {
+      ledController.solidColor(new Red());
+    } else {
+      ledController.solidColor(new Blue());
+    }
+    
   }
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {
-    ledController.bus(new Blue(), 43, busOneStart);
-    ledController.bus(new Yellow(), 43, busTwoStart);
-    busOneStart++;
-    busTwoStart++;
-  }
+  public void disabledPeriodic() {}
 
   /** This function is called once when test mode is enabled. */
   @Override

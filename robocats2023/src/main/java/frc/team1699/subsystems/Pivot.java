@@ -33,12 +33,12 @@ public class Pivot {
 
     private final double kBackStoredPosition = 0;
     private final double kShelfPosition = 170;
-    private final double kHighPosition = 170;
-    private final double kMidPosition = 200;
-    private final double kLowPosition = 220;
-    private final double kFloorPosition = 233;
+    private final double kHighPosition = 175;
+    private final double kMidPosition = 175;
+    private final double kLowPosition = 230;
+    private final double kFloorPosition = 230;
     private final double kFrontStoredPosition = 200;
-    private final double kCubeShootMidPosition = 46;
+    private final double kCubeShootMidPosition = 42;
     private final double kCubeShootHighPosition = 52;
     private double wantedPosition = 0;
 

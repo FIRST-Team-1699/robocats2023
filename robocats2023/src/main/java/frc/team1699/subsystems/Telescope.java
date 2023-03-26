@@ -32,13 +32,13 @@ public class Telescope {
     private final double kSmartTelescopeI = 4e-9;
     private final double kSmartTelescopeD = 0.0;
     private final double kTelescopeFF = 0.0008;
-    private final double kMaxError = 0;
+    private final double kMaxError = 0.2;
 
     // Positional constants
     private final double kStoredPercent = 0;
     private final double kShelfPercent = 0;
-    private final double kHighPercent = 350;
-    private final double kMidPercent = 128;
+    private final double kHighPercent = 340;
+    private final double kMidPercent = 20;
     private final double kLowPercent = 0;
     private final double kStoredFrontPercent = 0;
     private final double kFloorPercent = 0;

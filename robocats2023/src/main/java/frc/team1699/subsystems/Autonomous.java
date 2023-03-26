@@ -25,9 +25,9 @@ public class Autonomous {
     private static int pivotingTicks = 0;
     // TODO: TUNE
     private final double kMobilityTaxiRotations = 55;
-    private final double kPastChargeStationRotations = 60;
+    private final double kPastChargeStationRotations = 55;
     private final double kToChargeStationRotations = 25;
-    private final double kBackUpChargeStationRotations = 22;
+    private final double kBackUpChargeStationRotations = 10;
     private final int kMaxPivotTicks = 90;
 
     // robot components
@@ -38,7 +38,7 @@ public class Autonomous {
     public Autonomous(DriveTrain driveTrain, Intake intake, Manipulator manipulator) {
         autonChooser = new SendableChooser<String>();
         autonChooser.setDefaultOption(doNothing, doNothing);
-        // autonChooser.addOption(scoreMobilityBalance, scoreMobilityBalance);
+        autonChooser.addOption(scoreMobilityBalance, scoreMobilityBalance);
         autonChooser.addOption(scoreAndMobility, scoreAndMobility);
         autonChooser.addOption(scoreAndDoNothing, scoreAndDoNothing);
         autonChooser.addOption(mobilityOnly, mobilityOnly);
@@ -116,7 +116,7 @@ public class Autonomous {
                     case TAXIING:
                         driveTrain.setWantedState(DriveStates.AUTONOMOUS);
                         if (Math.abs(driveTrain.getEncoderRotations()[0]) <= kPastChargeStationRotations) {
-                            driveTrain.runArcadeDrive(0.0, .4);
+                            driveTrain.runArcadeDrive(0.0, .45);
                             System.out.println("taxxiing");
                             System.out.println(driveTrain.getCurrentState());
                         } else {
@@ -128,12 +128,12 @@ public class Autonomous {
                     case DRIVING_BACK:
                         driveTrain.setWantedState(DriveStates.AUTONOMOUS);
                         if (Math.abs(driveTrain.getEncoderRotations()[0]) <= kBackUpChargeStationRotations + 15) {
-                            driveTrain.runArcadeDrive(0.0, -.4);
+                            driveTrain.runArcadeDrive(0.0, -.45);
                             System.out.println("driving back");
                             System.out.println(driveTrain.getCurrentState());
                         } else {
                             driveTrain.runArcadeDrive(0, 0);
-                            currentState = AutonStates.DRIVING_BACK;
+                            currentState = AutonStates.BALANCING;
                             autoIsDone = true;
                         }
                     break;

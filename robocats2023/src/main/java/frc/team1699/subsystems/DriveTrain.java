@@ -12,6 +12,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class DriveTrain {
+    private boolean isReversed = false;
+
     private final double kDeadZone = 0;
     private DriveStates wantedState, currentState;
 
@@ -99,6 +101,10 @@ public class DriveTrain {
         double portOutput = 0.0;
         double starOutput = 0.0;
 
+        if(isReversed) {
+            throttle = -throttle;
+        }
+
         // deadband, makes it easier/possible to drive straight since it doesn't take
         // tiny inputs
         // TODO: tune deadband?
@@ -137,7 +143,7 @@ public class DriveTrain {
             starLeader.set(-throttle);
         } else {
             portLeader.set(portOutput);
-            starLeader.set(starOutput);
+            starLeader.set(starOutput);  
         }
     }
 
@@ -186,6 +192,10 @@ public class DriveTrain {
             break;
         }
         currentState = wantedState;
+    }
+
+    public void reverse() {
+        isReversed = !isReversed;
     }
 
     public DriveStates getCurrentState() {
