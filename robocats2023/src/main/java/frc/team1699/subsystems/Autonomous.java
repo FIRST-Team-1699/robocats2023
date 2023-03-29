@@ -25,9 +25,9 @@ public class Autonomous {
     private static int pivotingTicks = 0;
     // TODO: TUNE
     private final double kMobilityTaxiRotations = 55;
-    private final double kPastChargeStationRotations = 55;
+    private final double kPastChargeStationRotations = 62;
     private final double kToChargeStationRotations = 25;
-    private final double kBackUpChargeStationRotations = 12;
+    private final double kBackUpChargeStationRotations = 16;
     private final int kMaxPivotTicks = 90;
 
     // robot components
