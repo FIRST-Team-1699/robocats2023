@@ -159,7 +159,7 @@ public class Robot extends TimedRobot {
 
     // OPERATOR STICK
     // FLOOR POSITION
-    if (opJoystick.getRawButtonPressed(3)) {
+    if (opJoystick.getRawButtonPressed(6)) {
       manipulator.setWantedState(ManipulatorStates.FLOOR);
     }
 
@@ -277,12 +277,25 @@ public class Robot extends TimedRobot {
     } else {
       ledController.solidColor(new Blue());
     }
-    
   }
 
+  private int disabledPatternTicks = 0;
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    // ledController.rainbow();
+    disabledPatternTicks++;
+    if(disabledPatternTicks % 50 >= 25) {
+      if(DriverStation.getAlliance() == Alliance.Red) {
+        ledController.solidColor(new Red());
+      } else {
+        ledController.solidColor(new Blue());
+      }
+    } else {
+      ledController.alternateColors(new Yellow(), new Blue());
+    }
+
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override

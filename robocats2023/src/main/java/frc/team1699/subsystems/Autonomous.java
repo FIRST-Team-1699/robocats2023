@@ -25,10 +25,12 @@ public class Autonomous {
     private static int pivotingTicks = 0;
     // TODO: TUNE
     private final double kMobilityTaxiRotations = 55;
-    private final double kPastChargeStationRotations = 62;
+    private final double kPastChargeStationRotations = 57;
     private final double kToChargeStationRotations = 25;
-    private final double kBackUpChargeStationRotations = 16;
+    private final double kBackUpChargeStationRotations = 10;
     private final int kMaxPivotTicks = 90;
+
+    private int waitingTicks = 0;
 
     // robot components
     private DriveTrain driveTrain;
@@ -37,8 +39,8 @@ public class Autonomous {
 
     public Autonomous(DriveTrain driveTrain, Intake intake, Manipulator manipulator) {
         autonChooser = new SendableChooser<String>();
-        autonChooser.setDefaultOption(doNothing, doNothing);
-        autonChooser.addOption(scoreMobilityBalance, scoreMobilityBalance);
+        autonChooser.setDefaultOption(scoreMobilityBalance, scoreMobilityBalance);
+        autonChooser.addOption(doNothing, doNothing);
         autonChooser.addOption(scoreAndMobility, scoreAndMobility);
         autonChooser.addOption(scoreAndDoNothing, scoreAndDoNothing);
         autonChooser.addOption(mobilityOnly, mobilityOnly);
@@ -61,7 +63,7 @@ public class Autonomous {
         intake.setWantedState(IntakeStates.IDLE);
         currentState = AutonStates.STARTING;
         autoIsDone = false;
-
+        waitingTicks = 0;
     }
 
     public AutonStates getCurrentState() {
@@ -69,7 +71,7 @@ public class Autonomous {
     }
 
     public void update() {
-        System.out.println(autonChoice);
+       // System.out.println(autonChoice);
         switch (autonChoice) {
             case doNothing:
             // WORKING
@@ -118,8 +120,8 @@ public class Autonomous {
                         driveTrain.setWantedState(DriveStates.AUTONOMOUS);
                         if (Math.abs(driveTrain.getEncoderRotations()[0]) <= kPastChargeStationRotations) {
                             driveTrain.runArcadeDrive(0.0, .45);
-                            System.out.println("taxxiing");
-                            System.out.println(driveTrain.getCurrentState());
+                           // System.out.println("taxxiing");
+                           // System.out.println(driveTrain.getCurrentState());
                         } else {
                             driveTrain.runArcadeDrive(0, 0);
                             driveTrain.resetEncoders();
@@ -127,15 +129,18 @@ public class Autonomous {
                         }
                     break;
                     case DRIVING_BACK:
-                        driveTrain.setWantedState(DriveStates.AUTONOMOUS);
-                        if (Math.abs(driveTrain.getEncoderRotations()[0]) <= kBackUpChargeStationRotations + 15) {
-                            driveTrain.runArcadeDrive(0.0, -.45);
-                            System.out.println("driving back");
-                            System.out.println(driveTrain.getCurrentState());
-                        } else {
-                            driveTrain.runArcadeDrive(0, 0);
-                            currentState = AutonStates.BALANCING;
-                            autoIsDone = true;
+                        waitingTicks++;
+                        if(waitingTicks >= 25) {
+                            driveTrain.setWantedState(DriveStates.AUTONOMOUS);
+                            if (Math.abs(driveTrain.getEncoderRotations()[0]) <= kBackUpChargeStationRotations + 15) {
+                                driveTrain.runArcadeDrive(0.0, -.45);
+                                System.out.println("I AM BACKING UP I PROMISE");
+                                System.out.println(driveTrain.getCurrentState());
+                            } else {
+                                driveTrain.runArcadeDrive(0, 0);
+                                currentState = AutonStates.BALANCING;
+                                autoIsDone = true;
+                            }
                         }
                     break;
                     case COLLECTING:
