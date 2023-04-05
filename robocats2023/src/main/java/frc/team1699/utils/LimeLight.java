@@ -18,7 +18,9 @@ public class LimeLight {
         }
         return instance;
     }
-
+    public void setPip(double stream){
+        table.getEntry("stream").setValue(stream);
+    }
     public double getTV() {
         return table.getEntry("tv").getDouble(0);
     }

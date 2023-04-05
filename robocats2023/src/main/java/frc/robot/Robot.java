@@ -15,6 +15,7 @@ import frc.team1699.subsystems.Intake;
 import frc.team1699.subsystems.Manipulator;
 import frc.team1699.subsystems.Intake.IntakeStates;
 import frc.team1699.subsystems.Manipulator.ManipulatorStates;
+import frc.team1699.utils.LimeLight;
 import frc.team1699.utils.leds.LEDController;
 import frc.team1699.utils.leds.colors.*;
 //import frc.team1699.subsystems.Plow;
@@ -41,7 +42,7 @@ public class Robot extends TimedRobot {
   // private Plow plow;
   private DriveTrain driveTrain;
   private Autonomous autonomous;
-
+  private LimeLight limelight = LimeLight.getInstance();
   // Extra
   private LEDController ledController;
   private int busOneStart = 0;
@@ -56,6 +57,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    limelight.setPip(2);
+
     // Input
     driveJoystick = new Joystick(Constants.kDriveJoystickPort);
     opJoystick = new Joystick(Constants.kOperatorJoystickPort);
@@ -84,6 +87,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    
+    limelight.setPip(2);
+
     driveTrain.enableBrakeMode();
     autonomous.prepareForAuto();
   }
@@ -107,6 +113,9 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     ledController.alternateColors(new Yellow(), new Blue());
     driveTrain.setWantedState(DriveStates.MANUAL);
+    
+    limelight.setPip(2);
+
   }
 
   /** This function is called periodically during operator control. */
