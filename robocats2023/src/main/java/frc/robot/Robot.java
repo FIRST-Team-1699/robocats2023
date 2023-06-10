@@ -168,9 +168,9 @@ public class Robot extends TimedRobot {
 
     // OPERATOR STICK
     // FLOOR POSITION
-    if (opJoystick.getRawButtonPressed(6)) {
-      manipulator.setWantedState(ManipulatorStates.FLOOR);
-    }
+    // if (opJoystick.getRawButtonPressed(6)) {
+    //   manipulator.setWantedState(ManipulatorStates.FLOOR);
+    // }
 
     if (opJoystick.getPOV() == 0) {
       manipulator.incrementTelescopePosition();
@@ -248,10 +248,11 @@ public class Robot extends TimedRobot {
       intake.setWantedState(IntakeStates.IDLE);
     }
 
-    if (opJoystick.getRawButton(2)) {
-      manipulator.resetTelescopeEncoder();
-      manipulator.resetPivotEncoder();
-    }
+    // if (opJoystick.getRawButtonPressed(2)) {
+    //   manipulator.resetTelescopeEncoder();
+    //   manipulator.resetPivotEncoder();
+    //   manipulator.setWantedState(ManipulatorStates.STORED);
+    // }
 
     if (driveJoystick.getRawButtonPressed(5)) {
       driveTrain.reverse();
