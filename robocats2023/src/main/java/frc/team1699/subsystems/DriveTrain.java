@@ -12,6 +12,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class DriveTrain {
+    private boolean isReversed = false;
+
     private final double kDeadZone = 0;
     private DriveStates wantedState, currentState;
 
@@ -22,8 +24,8 @@ public class DriveTrain {
 
     private Joystick joystick;
     private AHRS gyro;
-    //balancing constants
-    private final double kBalanceP = .023; // 0.022 WORKS WNE DAY 1 // 0.023 BETTER
+    // balancing constants
+    private final double kBalanceP = .022; // 0.022 WORKS WNE DAY 1 // 0.023 BETTER
     private final double kBalanceI = 0.0;
     private final double kBalanceD = 0.0015; // 0.0015 WORKS WNE DAY 1
     private final double kLevelPitch = 0;
@@ -80,6 +82,7 @@ public class DriveTrain {
         starFollowerOne.setIdleMode(IdleMode.kBrake);
         starFollowerTwo.setIdleMode(IdleMode.kBrake);
     }
+
     public void enableCoastMode() {
         portLeader.setIdleMode(IdleMode.kCoast);
         portFollowerOne.setIdleMode(IdleMode.kCoast);
@@ -90,14 +93,30 @@ public class DriveTrain {
         starFollowerTwo.setIdleMode(IdleMode.kCoast);
     }
 
-    /** runArcadeDrive is a magic method used every year. It it what we use to control the robot's movement */
+    /**
+     * runArcadeDrive is a magic method used every year. It it what we use to
+     * control the robot's movement
+     */
     public void runArcadeDrive(double rotate, double throttle) {
         double portOutput = 0.0;
         double starOutput = 0.0;
 
-        // deadband, makes it easier/possible to drive straight since it doesn't take tiny inputs
-        //TODO: tune deadband?
-        if(currentState == DriveStates.MANUAL && Math.abs(rotate) < kDeadZone) {
+        if(isReversed) {
+            throttle = -throttle;
+        }
+
+        if(throttle > .95) {
+            throttle = .95;
+        }
+
+        if(throttle < -.95) {
+            throttle = -.95;
+        }
+
+        // deadband, makes it easier/possible to drive straight since it doesn't take
+        // tiny inputs
+        // TODO: tune deadband?
+        if (currentState == DriveStates.MANUAL && Math.abs(rotate) < kDeadZone) {
             rotate = 0;
         }
 
@@ -127,29 +146,29 @@ public class DriveTrain {
         }
         // set motors to port/star output here or else nothing happens lol
 
-        if(getCurrentState() == DriveStates.AUTONOMOUS) {
+        if (getCurrentState() == DriveStates.AUTONOMOUS) {
             portLeader.set(throttle);
             starLeader.set(-throttle);
         } else {
             portLeader.set(portOutput);
-            starLeader.set(starOutput);
+            starLeader.set(starOutput);  
         }
     }
 
     public void update() {
-        switch(currentState) {
+        switch (currentState) {
             case MANUAL:
                 runArcadeDrive(joystick.getX(), -joystick.getY());
             break;
             case AUTOBALANCE:
                 // if(getPitch() < 3 && getPitch() > -3) {
-                //     runArcadeDrive(0, 0);
+                // runArcadeDrive(0, 0);
                 // } else if(getPitch() > 3) {
-                //     portLeader.set(.05);
-                //     starLeader.set(-.05);
+                // portLeader.set(.05);
+                // starLeader.set(-.05);
                 // } else {
-                //     portLeader.set(-.05);
-                //     starLeader.set(.05);
+                // portLeader.set(-.05);
+                // starLeader.set(.05);
                 // }
                 // TODO: TUNE the CONTROLLER AND TOLERANCE AND LEVEL PITCH ETC
                 runArcadeDrive(0, -balanceController.calculate(getPitch()));
@@ -158,8 +177,9 @@ public class DriveTrain {
             break;
         }
     }
+
     public void setWantedState(DriveStates wantedState) {
-        if(this.currentState != wantedState) {
+        if (this.currentState != wantedState) {
             this.wantedState = wantedState;
             handleStateTransition();
         }
@@ -182,6 +202,10 @@ public class DriveTrain {
         currentState = wantedState;
     }
 
+    public void reverse() {
+        isReversed = !isReversed;
+    }
+
     public DriveStates getCurrentState() {
         return this.currentState;
     }
@@ -192,7 +216,7 @@ public class DriveTrain {
     }
 
     public double[] getEncoderRotations() {
-        return new double[]{portEncoder.getPosition(), starEncoder.getPosition()};
+        return new double[] { portEncoder.getPosition(), starEncoder.getPosition() };
     }
 
     public void calibrateGyro() {
@@ -212,7 +236,6 @@ public class DriveTrain {
     }
 
     public enum DriveStates {
-        MANUAL,
-        AUTOBALANCE, AUTONOMOUS
+        MANUAL, AUTOBALANCE, AUTONOMOUS
     }
 }

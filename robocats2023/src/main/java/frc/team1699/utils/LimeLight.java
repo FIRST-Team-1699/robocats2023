@@ -18,7 +18,9 @@ public class LimeLight {
         }
         return instance;
     }
-
+    public void setPip(double stream){
+        table.getEntry("stream").setValue(stream);
+    }
     public double getTV() {
         return table.getEntry("tv").getDouble(0);
     }
@@ -43,26 +45,26 @@ public class LimeLight {
         table.getEntry("ledMode").setNumber(2);
     }
 
-    public void setPipeline(double index){
+    public void setPipeline(double index) {
         table.getEntry("pipeline").setNumber(index);
     }
 
-    public void togglePipeline(){
+    public void togglePipeline() {
         double lastPipeline = table.getEntry("pipeline").getDouble(0.0);
-        if (lastPipeline == 0.0){
+        if (lastPipeline == 0.0) {
             table.getEntry("pipeline").setNumber(1.0);
         } else {
             table.getEntry("pipeline").setNumber(0.0);
         }
     }
-    
-    public double getDistanceFromTarget(){
+
+    public double getDistanceFromTarget() {
         double targetOffsetAngle_Vertical = getTY();
         double limelightMountAngle = 47.0;
         double limelightHeight = 23.5;
         double targetHeight = 71;
         double angleToGoalRadians = (limelightMountAngle + targetOffsetAngle_Vertical) * (3.14159 / 180.0);
-        double distanceToGoal = (targetHeight - limelightHeight)/Math.tan(angleToGoalRadians);
+        double distanceToGoal = (targetHeight - limelightHeight) / Math.tan(angleToGoalRadians);
         return distanceToGoal;
     }
 }
